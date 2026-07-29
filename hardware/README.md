@@ -3,6 +3,7 @@
 This directory contains the mechanical resources for OpenNeck:
 
 - [`3d_prints`](./3d_prints/): print-ready STL models and editable STEP models.
+- [`simulation`](./simulation/): standalone URDF and MuJoCo models with their shared meshes.
 
 ## Sourcing Parts
 
