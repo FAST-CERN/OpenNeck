@@ -1,5 +1,9 @@
 # OpenNeck
 
+<p align="center">
+  <img src="docs/images/openneck-on-robot.jpg" alt="安装在机器人上的 OpenNeck 两轴头颈云台" width="360">
+</p>
+
 两轴头颈云台驱动。主要控制 API 只接受相对机械中位的角度：
 
 - `yaw_deg = 0`：正前方
@@ -159,3 +163,7 @@ openneck voltage --port "$OPENNECK_PORT"
 ```
 
 `openneck-calibrate-middle` 修改舵机内部的非易失硬件中位；`openneck calibrate` 只更新 OpenNeck 的 JSON 运行配置。
+
+## 许可证
+
+本项目基于 [Apache License 2.0](LICENSE) 开源。
