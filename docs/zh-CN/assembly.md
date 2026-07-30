@@ -1,12 +1,14 @@
 # OpenNeck 机械装配
 
+[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [English](../en/assembly.md) · **中文**
+
 全程断电操作。先认准三个方向：D415 镜头朝前，yaw 舵机输出轴朝上，pitch 舵机输出轴水平。
 
-![OpenNeck 爆炸图](../docs/images/assembly-exploded.jpg)
+![OpenNeck 爆炸图](../images/assembly-exploded.jpg)
 
 ## 准备
 
-打印件每种 1 个：`base_mount`、`pitch_mount`、`camera_mount`、`pitch_pivot`。还需要 2 个 ST-3032 舵机、2 个舵盘、D415、URT-2 和舵机转接板；完整采购清单见 [Hardware README](./README.md)。
+打印件每种 1 个：`base_mount`、`pitch_mount`、`camera_mount`、`pitch_pivot`。还需要 2 个 ST-3032 舵机、2 个舵盘、D415、URT-2 和舵机转接板；完整清单见[硬件准备](./hardware.md)。
 
 先清理打印件的支撑和孔内毛刺，再按用途分好螺丝：
 
@@ -31,7 +33,7 @@
 3. 把 `camera_mount` 放到 `pitch_mount` 两臂之间：舵机侧装舵盘，另一侧插入 `pitch_pivot`。
 4. 确认两侧同轴后，用 2 颗 M3 × 6 固定摄像头支架；pitch 舵盘暂时不要锁死。
 
-![OpenNeck 上半部分安装方向](../docs/images/assembly-upper-module.jpg)
+![OpenNeck 上半部分安装方向](../images/assembly-upper-module.jpg)
 
 ## 3. 合体
 
@@ -39,7 +41,7 @@
 2. 对准 yaw 舵盘和底部孔位，保持水平，垂直压合。
 3. 两个安装面贴合后，锁紧 yaw 和 pitch 舵盘自带的紧固件。
 
-![OpenNeck 上下组件对接](../docs/images/assembly-join.jpg)
+![OpenNeck 上下组件对接](../images/assembly-join.jpg)
 
 ## 4. 检查
 
@@ -50,6 +52,6 @@
 - 舵机、舵盘和两块电路板没有松动；
 - 线缆在整个活动范围内不会被拉紧或夹住。
 
-![OpenNeck 装配完成](../docs/images/assembly-finished.jpg)
+![OpenNeck 装配完成](../images/assembly-finished.jpg)
 
 > 自攻螺丝拧到螺丝头贴合即可，过紧会撑裂打印件。D415 只能使用 M6 × 8，不要换成长螺丝。

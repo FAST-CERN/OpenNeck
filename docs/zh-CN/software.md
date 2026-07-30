@@ -1,6 +1,6 @@
 # OpenNeck 软件驱动
 
-[返回项目主页](../README.md)
+[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [English](../en/software.md) · **中文**
 
 OpenNeck 软件驱动负责把目标角度转换为舵机位置，并执行标定后的机械限位。主要控制 API 只接受相对机械中位的角度：
 
@@ -99,9 +99,9 @@ finally:
 
 `close()` 只关闭串口，不改变当前扭矩状态；需要释放保持力时应显式调用 `release_torque()`。
 
-## 装配与标定
+## 舵机设置与标定
 
-机械部分先按 [OpenNeck 机械装配说明](../hardware/ASSEMBLY.md)完成。以下步骤用于设置舵机 ID、中位和安全活动范围。
+机械部分先按[机械装配](./assembly.md)完成。以下步骤用于设置舵机 ID、中位和安全活动范围。
 
 1. 确认云台断电时能在安全范围内手动活动，没有卡死、撞限位或拉线。
 
