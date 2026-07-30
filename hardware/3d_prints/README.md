@@ -1,5 +1,7 @@
 # 3D-Printable Parts
 
+For installation after printing, see the [mechanical assembly guide](../ASSEMBLY.md).
+
 Each part is provided in two formats:
 
 | Part | STL | STEP |
