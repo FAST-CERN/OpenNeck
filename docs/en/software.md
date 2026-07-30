@@ -31,74 +31,6 @@ Log in again for the change to take effect. For temporary testing, you can use:
 sudo chmod 666 /dev/ttyACM0
 ```
 
-## Configuration
-
-By default, OpenNeck reads `active_vision_config.json` from the current directory. You can also specify another file through the API or CLI:
-
-```json
-{
-  "port": "/dev/ttyACM0",
-  "baudrate": 1000000,
-  "yaw_id": 1,
-  "pitch_id": 2,
-  "yaw_center_step": 2048,
-  "yaw_min_step": 1024,
-  "yaw_max_step": 3072,
-  "yaw_step_sign": 1,
-  "pitch_center_step": 2048,
-  "pitch_min_step": 1365,
-  "pitch_max_step": 2731,
-  "pitch_step_sign": 1,
-  "speed": 0,
-  "acceleration": 0
-}
-```
-
-`yaw_step_sign` and `pitch_step_sign` accept only `1` or `-1`:
-
-- Use `1` when a positive logical angle increases the servo step value.
-- Use `-1` when a positive logical angle decreases the servo step value.
-
-These two fields fully represent the mechanical installation direction, so upper-level callers always use the same left-positive and up-positive convention. A configuration containing unknown fields raises an error so that invalid settings are not silently accepted.
-
-When upgrading from `0.1.x`, run `openneck calibrate` again. The normalized-amplitude and pose-inversion fields in an old configuration cannot safely determine the new physical angle directions, so `0.2.x` does not convert them automatically. Back up or move the old file first, then set both `*_step_sign` fields for the actual installation direction.
-
-## Python API
-
-The package root exposes only `NeckAngles` and `OpenNeckController`:
-
-```python
-from openneck import OpenNeckController
-
-with OpenNeckController(
-    config="active_vision_config.json",
-    port="/dev/ttyACM0",
-) as neck:
-    applied = neck.move_deg(yaw_deg=30.0, pitch_deg=-15.0)
-    print(applied)
-    print(neck.read_deg())
-    print(neck.read_voltage())
-```
-
-`move_deg()` returns the actual target angle after mechanical-limit clipping and integer servo-step quantization. It represents the target that was sent, not a position reading; call `read_deg()` when you need the current position.
-
-Without a context manager, manage the connection explicitly:
-
-```python
-from openneck import OpenNeckController
-
-neck = OpenNeckController(port="/dev/ttyACM0")
-try:
-    neck.connect()
-    neck.center()
-    neck.move_deg(yaw_deg=-20.0, pitch_deg=10.0)
-    neck.release_torque()
-finally:
-    neck.close()
-```
-
-`close()` only closes the serial port and does not change the current torque state. Call `release_torque()` explicitly when the holding force should be released.
-
 ## Servo Setup and Calibration
 
 Complete the [mechanical assembly](./assembly.md) first. The following steps assign servo IDs, set the center, and calibrate the safe motion range.
@@ -155,6 +87,38 @@ openneck test yaw --port "$OPENNECK_PORT" --angle-deg 5
 openneck test pitch --port "$OPENNECK_PORT" --angle-deg 5
 ```
 
+## Configuration
+
+By default, OpenNeck reads `active_vision_config.json` from the current directory. You can also specify another file through the API or CLI:
+
+```json
+{
+  "port": "/dev/ttyACM0",
+  "baudrate": 1000000,
+  "yaw_id": 1,
+  "pitch_id": 2,
+  "yaw_center_step": 2048,
+  "yaw_min_step": 1024,
+  "yaw_max_step": 3072,
+  "yaw_step_sign": 1,
+  "pitch_center_step": 2048,
+  "pitch_min_step": 1365,
+  "pitch_max_step": 2731,
+  "pitch_step_sign": 1,
+  "speed": 0,
+  "acceleration": 0
+}
+```
+
+`yaw_step_sign` and `pitch_step_sign` accept only `1` or `-1`:
+
+- Use `1` when a positive logical angle increases the servo step value.
+- Use `-1` when a positive logical angle decreases the servo step value.
+
+These two fields fully represent the mechanical installation direction, so upper-level callers always use the same left-positive and up-positive convention. A configuration containing unknown fields raises an error so that invalid settings are not silently accepted.
+
+When upgrading from `0.1.x`, run `openneck calibrate` again. The normalized-amplitude and pose-inversion fields in an old configuration cannot safely determine the new physical angle directions, so `0.2.x` does not convert them automatically. Back up or move the old file first, then set both `*_step_sign` fields for the actual installation direction.
+
 ## Other Commands
 
 ```bash
@@ -163,3 +127,39 @@ openneck voltage --port "$OPENNECK_PORT"
 ```
 
 `openneck-calibrate-middle` changes the servo's internal nonvolatile hardware midpoint; `openneck calibrate` only updates OpenNeck's JSON runtime configuration.
+
+## Python API
+
+The package root exposes only `NeckAngles` and `OpenNeckController`:
+
+```python
+from openneck import OpenNeckController
+
+with OpenNeckController(
+    config="active_vision_config.json",
+    port="/dev/ttyACM0",
+) as neck:
+    applied = neck.move_deg(yaw_deg=30.0, pitch_deg=-15.0)
+    print(applied)
+    print(neck.read_deg())
+    print(neck.read_voltage())
+```
+
+`move_deg()` returns the actual target angle after mechanical-limit clipping and integer servo-step quantization. It represents the target that was sent, not a position reading; call `read_deg()` when you need the current position.
+
+Without a context manager, manage the connection explicitly:
+
+```python
+from openneck import OpenNeckController
+
+neck = OpenNeckController(port="/dev/ttyACM0")
+try:
+    neck.connect()
+    neck.center()
+    neck.move_deg(yaw_deg=-20.0, pitch_deg=10.0)
+    neck.release_torque()
+finally:
+    neck.close()
+```
+
+`close()` only closes the serial port and does not change the current torque state. Call `release_torque()` explicitly when the holding force should be released.

@@ -29,7 +29,7 @@ OpenNeck is an open-source 2-DoF robotic neck gimbal. The repository provides 3D
 
 | Topic | Document |
 |---|---|
-| Software installation, configuration, API, calibration, and CLI | [Software Driver](docs/en/software.md) |
+| Software installation, calibration, configuration, CLI, and API | [Software Driver](docs/en/software.md) |
 | Hardware sourcing and 3D printing | [Hardware Preparation](docs/en/hardware.md) |
 | Mechanical installation | [Mechanical Assembly](docs/en/assembly.md) |
 | URDF model | [openneck.urdf](hardware/simulation/openneck.urdf) |
