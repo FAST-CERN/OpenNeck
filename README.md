@@ -43,6 +43,10 @@ When building OpenNeck for the first time, follow these documents in order:
 2. Follow [Mechanical Assembly](docs/en/assembly.md) to assemble the gimbal.
 3. Follow [Software Driver](docs/en/software.md) to install the driver, assign servo IDs, and complete calibration.
 
+## Acknowledgments
+
+The hardware design and implementation of OpenNeck were completed by [zc-xzc](https://github.com/zc-xzc).
+
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE).
