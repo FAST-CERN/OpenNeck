@@ -25,3 +25,6 @@ dist/
 # Logs and runtime artifacts
 *.log
 active_vision_config.json
+
+# Superpowers SDD scratch (per docs/knowledge/ref/doc-conventions.md)
+.superpowers/
