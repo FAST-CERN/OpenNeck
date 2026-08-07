@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**设计已批准，实现计划已编写完成（writing-plans），待执行。** 尚未进入代码实现。各阶段计划见 [`plan/`](plan/)；执行方式待选（subagent-driven 或 inline）。
+**设计已批准，实现计划已编写完成（writing-plans）。执行方式：subagent-driven；待用户下命令后从 software phase-1 开始执行。** 尚未进入代码实现。各阶段计划见 [`plan/`](plan/)。
 
 ## 工作概述
 
