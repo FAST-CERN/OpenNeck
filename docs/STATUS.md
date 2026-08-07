@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**设计已批准，实现计划已编写完成（writing-plans）。执行方式：subagent-driven；待用户下命令后从 software phase-1 开始执行。** 尚未进入代码实现。各阶段计划见 [`plan/`](plan/)。
+**software phase-1（backend 抽象骨架）已完成并通过最终审查（merge-ready，零行为变化）。执行方式：subagent-driven；待确认后继续 software phase-2。** 代码实现已开始。各阶段计划见 [`plan/`](plan/)。
 
 ## 工作概述
 
@@ -14,7 +14,7 @@
 
 | 组件 | 阶段 | 状态 | 计划 | 进度 |
 |---|---|---|---|---|
-| software | phase-1 backend-skeleton | 未开始 | [`plan/software/README.md`](plan/software/README.md) | [`progress/software/`](progress/software/) |
+| software | phase-1 backend-skeleton | ✅ 完成 (merge-ready) | [`plan/software/README.md`](plan/software/README.md) | [`progress/software/phase-1-backend-skeleton.md`](progress/software/phase-1-backend-skeleton.md) |
 | software | phase-2 config-extension | 未开始 | 同上 | 同上 |
 | software | phase-3 dynamixel-backend | 未开始 | 同上 | 同上 |
 | software | phase-4 sdk-wiring | 未开始 | 同上 | 同上 |

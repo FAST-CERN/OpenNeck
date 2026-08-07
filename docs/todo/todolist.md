@@ -6,7 +6,7 @@
 
 ## 待办
 
-- （暂无）
+- M1（software phase-3 处理）：`ServoBackend` Protocol 是否纳入 `ping`/`enable_torque`（设计 §4 已列），还是在设计文档里标为内部？phase-3 落地 `DynamixelBackend` 时定（当前 `FeetechBackend` 已实现二者，仅内部使用，向后兼容，不阻塞）。
 
 ## 未采纳 / 延后
 

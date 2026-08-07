@@ -6,7 +6,7 @@
 
 | 阶段 | 进度记录 | 完成日期 |
 |---|---|---|
-| phase-1 backend-skeleton | — | — |
+| phase-1 backend-skeleton | [phase-1-backend-skeleton.md](phase-1-backend-skeleton.md) ✅ merge-ready | 2026-08-07 |
 | phase-2 config-extension | — | — |
 | phase-3 dynamixel-backend | — | — |
 | phase-4 sdk-wiring | — | — |
