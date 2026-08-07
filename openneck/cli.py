@@ -23,7 +23,7 @@ from ._config import (
     replace_config,
     save_config,
 )
-from ._driver import ServoDriver
+from ._backends import ServoBackend, make_backend
 from .api import _controller_from_config
 
 CALIBRATION_DISPLAY_PERIOD_S = 0.1
@@ -87,7 +87,7 @@ def cmd_voltage(args) -> None:
 
 def cmd_calibrate(args) -> None:
     cfg = with_overrides(args, allow_missing=True)
-    with ServoDriver(cfg, enable_torque_on_connect=False) as driver:
+    with make_backend(cfg, enable_torque_on_connect=False) as driver:
         driver.release_torque()
         print("\n[1/3] Move the camera to physical forward center.")
         input("Press Enter when aligned...")
@@ -123,7 +123,7 @@ def cmd_calibrate(args) -> None:
 
 
 def record_axis_limits(
-    driver: ServoDriver, motor_id: int, name: str
+    driver: ServoBackend, motor_id: int, name: str
 ) -> tuple[int, int]:
     print(f"\nMove ONLY the {name} axis through its full safe range.")
     print("Do not force the mechanism. Press Enter when finished.")
