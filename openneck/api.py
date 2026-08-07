@@ -17,7 +17,7 @@ from ._angles import step_to_angle as _step_to_angle
 from ._config import Config as _Config
 from ._config import load_config as _load_config
 from ._config import replace_config as _replace_config
-from ._driver import ServoDriver as _ServoDriver
+from ._backends import make_backend as _make_backend
 
 
 __all__ = ["NeckAngles", "OpenNeckController"]
@@ -48,17 +48,17 @@ class OpenNeckController:
         if port is not None:
             loaded = _replace_config(loaded, port=port)
         self._config = loaded
-        self._driver = _ServoDriver(loaded)
+        self._backend = _make_backend(loaded)
 
     def connect(self) -> None:
         """Open the servo bus and enable torque on both axes."""
-        self._driver.connect()
+        self._backend.connect()
 
     def move_deg(self, yaw_deg: float, pitch_deg: float) -> NeckAngles:
         """Send target angles and return the mechanically clamped target."""
         yaw_step = self._angle_to_step("yaw", yaw_deg)
         pitch_step = self._angle_to_step("pitch", pitch_deg)
-        self._driver.write_positions(
+        self._backend.write_positions(
             {
                 self._config.yaw_id: yaw_step,
                 self._config.pitch_id: pitch_step,
@@ -75,7 +75,7 @@ class OpenNeckController:
 
     def read_deg(self) -> NeckAngles:
         """Read current servo positions as angles relative to the center."""
-        positions = self._driver.read_positions()
+        positions = self._backend.read_positions()
         return NeckAngles(
             yaw_deg=self._step_to_angle(
                 "yaw", positions[self._config.yaw_id]
@@ -88,17 +88,17 @@ class OpenNeckController:
     def read_voltage(self) -> dict[str, float]:
         """Read the yaw and pitch servo supply voltages."""
         return {
-            "yaw": self._driver.read_voltage(self._config.yaw_id),
-            "pitch": self._driver.read_voltage(self._config.pitch_id),
+            "yaw": self._backend.read_voltage(self._config.yaw_id),
+            "pitch": self._backend.read_voltage(self._config.pitch_id),
         }
 
     def release_torque(self) -> None:
         """Disable holding torque on both axes."""
-        self._driver.release_torque()
+        self._backend.release_torque()
 
     def close(self) -> None:
         """Close the servo bus without changing the torque state."""
-        self._driver.close()
+        self._backend.close()
 
     def __enter__(self) -> Self:
         self.connect()
@@ -128,7 +128,7 @@ class OpenNeckController:
         if axis not in {"yaw", "pitch"}:
             raise ValueError(f"unsupported OpenNeck axis: {axis!r}")
         step = self._angle_to_step(axis, angle_deg)
-        self._driver.write_positions(
+        self._backend.write_positions(
             {getattr(self._config, f"{axis}_id"): step}
         )
         return self._step_to_angle(axis, step)
@@ -142,7 +142,7 @@ def _controller_from_config(
     """Construct a controller from an already validated private config."""
     controller = OpenNeckController.__new__(OpenNeckController)
     controller._config = config
-    controller._driver = _ServoDriver(
+    controller._backend = _make_backend(
         config,
         enable_torque_on_connect=enable_torque_on_connect,
     )
