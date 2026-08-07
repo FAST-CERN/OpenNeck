@@ -7,7 +7,7 @@ from typing import Any
 from unittest.mock import patch
 
 from openneck._config import Config
-from openneck._driver import ServoDriver
+from openneck._backends.feetech import FeetechBackend
 
 
 def make_fake_sdk() -> tuple[types.ModuleType, dict[str, Any]]:
@@ -78,15 +78,15 @@ def make_fake_sdk() -> tuple[types.ModuleType, dict[str, Any]]:
     return module, state
 
 
-class ServoDriverTests(unittest.TestCase):
+class FeetechBackendTests(unittest.TestCase):
     def test_ping_failure_does_not_enable_any_torque(self) -> None:
         sdk, state = make_fake_sdk()
         state["fail_ping"] = 2
-        driver = ServoDriver(Config(port="/dev/fake"))
+        driver = FeetechBackend(Config(port="/dev/fake"))
 
         with (
             patch.dict(sys.modules, {"scservo_sdk": sdk}),
-            patch("openneck._driver.time.sleep"),
+            patch("openneck._backends.feetech.time.sleep"),
             self.assertRaisesRegex(RuntimeError, "ping servo 2"),
         ):
             driver.connect()
@@ -97,7 +97,7 @@ class ServoDriverTests(unittest.TestCase):
     def test_torque_is_rolled_back_if_enabling_one_axis_fails(self) -> None:
         sdk, state = make_fake_sdk()
         state["fail_enable"] = 2
-        driver = ServoDriver(Config(port="/dev/fake"))
+        driver = FeetechBackend(Config(port="/dev/fake"))
 
         with (
             patch.dict(sys.modules, {"scservo_sdk": sdk}),
@@ -110,7 +110,7 @@ class ServoDriverTests(unittest.TestCase):
 
     def test_sdk_busy_flag_is_reset_when_packet_call_raises(self) -> None:
         sdk, state = make_fake_sdk()
-        driver = ServoDriver(Config(port="/dev/fake"))
+        driver = FeetechBackend(Config(port="/dev/fake"))
 
         with patch.dict(sys.modules, {"scservo_sdk": sdk}):
             driver.connect()
