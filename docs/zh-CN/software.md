@@ -19,6 +19,16 @@ Teleopit 负责把人体姿态转换为机器人目标角度；OpenNeck 只负�
 pip install .
 ```
 
+### Dynamixel 后端（可选）
+
+Dynamixel 后端使用以 git 子模块内置的 ROBOTIS SDK。克隆子模块后以可编辑方式安装：
+
+```bash
+git clone --recurse-submodules <repo>
+pip install .
+pip install -e thirdparty/DynamixelSDK/python
+```
+
 Linux 没有串口权限时：
 
 ```bash
@@ -87,6 +97,8 @@ openneck test yaw --port "$OPENNECK_PORT" --angle-deg 5
 openneck test pitch --port "$OPENNECK_PORT" --angle-deg 5
 ```
 
+`openneck calibrate` 流程（逻辑中位 + 安全范围）对两种后端都一样，因为它只读取当前位置。`openneck-calibrate-middle` 工具仅适用于 Feetech（它写入舵机内部的硬件中位）。Dynamixel 请用 `openneck calibrate` 对齐逻辑中位；如需平移内部中位，请直接在电机上设置硬件 homing offset（超出本驱动范围）。
+
 ## 配置
 
 默认从当前目录的 `active_vision_config.json` 读取配置，也可以在 API 或 CLI 中指定其他文件：
@@ -110,6 +122,27 @@ openneck test pitch --port "$OPENNECK_PORT" --angle-deg 5
 }
 ```
 
+Dynamixel 构建请选择后端并设置 Dynamixel 专属字段（以下为默认值；`profile_velocity` / `profile_acceleration` 为 `0` 表示最大）：
+
+```json
+{
+  "port": "/dev/ttyUSB0",
+  "baudrate": 57600,
+  "servo_backend": "dynamixel",
+  "operating_mode": 3,
+  "yaw_id": 1,
+  "pitch_id": 2,
+  "yaw_center_step": 2048,
+  "yaw_min_step": 1024,
+  "yaw_max_step": 3072,
+  "yaw_step_sign": 1,
+  "pitch_center_step": 2048,
+  "pitch_min_step": 1365,
+  "pitch_max_step": 2731,
+  "pitch_step_sign": 1
+}
+```
+
 `yaw_step_sign` 和 `pitch_step_sign` 只允许为 `1` 或 `-1`：
 
 - 逻辑正角度使舵机 step 增大时填 `1`。
@@ -118,6 +151,15 @@ openneck test pitch --port "$OPENNECK_PORT" --angle-deg 5
 机械安装方向完全由这两个字段吸收，上层调用始终使用相同的左正、上正约定。配置包含未知字段时会直接报错，避免错误配置被静默接受。
 
 从 `0.1.x` 升级时需要重新运行 `openneck calibrate`。旧配置中的归一化幅度和姿态反向字段不能安全推导新的物理角度方向，因此 `0.2.x` 不会自动转换旧配置；请先备份或移走旧文件，再按实际安装方向设置两个 `*_step_sign` 字段。
+
+## 舵机后端
+
+OpenNeck 支持两类舵机，由 `servo_backend` 字段选择：
+
+- `"feetech"`（默认）—— 经 `scservo_sdk` 驱动 Feetech SCS/STS。
+- `"dynamixel"` —— 经内置 `dynamixel_easy_sdk` 驱动 Dynamixel X 系列。
+
+Dynamixel 专属字段：`operating_mode`（默认 `3`，POSITION），以及 `profile_velocity` / `profile_acceleration`（默认 `0`，表示最大）。Feetech 后端会忽略它们。完整模型见[设计合同](../knowledge/twist2-dynamixel-design.md)。
 
 ## 其他命令
 

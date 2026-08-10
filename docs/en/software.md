@@ -19,6 +19,17 @@ Teleopit converts human poses into robot target angles; OpenNeck only executes t
 pip install .
 ```
 
+### Dynamixel backend (optional)
+
+The Dynamixel backend uses the vendored ROBOTIS SDK, included as a git
+submodule. Install it editable after cloning with submodules:
+
+```bash
+git clone --recurse-submodules <repo>
+pip install .
+pip install -e thirdparty/DynamixelSDK/python
+```
+
 If the current Linux user does not have serial-port permission:
 
 ```bash
@@ -87,6 +98,13 @@ openneck test yaw --port "$OPENNECK_PORT" --angle-deg 5
 openneck test pitch --port "$OPENNECK_PORT" --angle-deg 5
 ```
 
+The `openneck calibrate` procedure (logical center + safe range) works the same
+for both backends because it only reads present positions. The
+`openneck-calibrate-middle` tool is Feetech-specific (it writes the servo's
+internal hardware midpoint). For Dynamixel, align the logical center with
+`openneck calibrate`; set a hardware homing offset directly on the motor only if
+you need the internal midpoint shifted (out of scope for this driver).
+
 ## Configuration
 
 By default, OpenNeck reads `active_vision_config.json` from the current directory. You can also specify another file through the API or CLI:
@@ -110,6 +128,28 @@ By default, OpenNeck reads `active_vision_config.json` from the current director
 }
 ```
 
+For a Dynamixel build, select the backend and set the Dynamixel-only fields
+(defaults shown; `profile_velocity` / `profile_acceleration` of `0` mean max):
+
+```json
+{
+  "port": "/dev/ttyUSB0",
+  "baudrate": 57600,
+  "servo_backend": "dynamixel",
+  "operating_mode": 3,
+  "yaw_id": 1,
+  "pitch_id": 2,
+  "yaw_center_step": 2048,
+  "yaw_min_step": 1024,
+  "yaw_max_step": 3072,
+  "yaw_step_sign": 1,
+  "pitch_center_step": 2048,
+  "pitch_min_step": 1365,
+  "pitch_max_step": 2731,
+  "pitch_step_sign": 1
+}
+```
+
 `yaw_step_sign` and `pitch_step_sign` accept only `1` or `-1`:
 
 - Use `1` when a positive logical angle increases the servo step value.
@@ -118,6 +158,18 @@ By default, OpenNeck reads `active_vision_config.json` from the current director
 These two fields fully represent the mechanical installation direction, so upper-level callers always use the same left-positive and up-positive convention. A configuration containing unknown fields raises an error so that invalid settings are not silently accepted.
 
 When upgrading from `0.1.x`, run `openneck calibrate` again. The normalized-amplitude and pose-inversion fields in an old configuration cannot safely determine the new physical angle directions, so `0.2.x` does not convert them automatically. Back up or move the old file first, then set both `*_step_sign` fields for the actual installation direction.
+
+## Servo backend
+
+OpenNeck supports two servo families, selected by the `servo_backend` field:
+
+- `"feetech"` (default) — Feetech SCS/STS via `scservo_sdk`.
+- `"dynamixel"` — Dynamixel X-series via the vendored `dynamixel_easy_sdk`.
+
+Dynamixel-only fields: `operating_mode` (default `3`, POSITION), and
+`profile_velocity` / `profile_acceleration` (default `0`, meaning max). They
+are ignored by the Feetech backend. See the
+[design contract](../knowledge/twist2-dynamixel-design.md) for the full model.
 
 ## Other Commands
 
