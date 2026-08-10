@@ -37,6 +37,8 @@ OpenNeck is an open-source 2-DoF robotic neck gimbal. The repository provides 3D
 
 ## Getting Started
 
+Clone with `--recurse-submodules` so the Dynamixel SDK is fetched, or run `git submodule update --init --recursive` after cloning.
+
 When building OpenNeck for the first time, follow these documents in order:
 
 1. Use [Hardware Preparation](docs/en/hardware.md) to source the components and print the structural parts.
