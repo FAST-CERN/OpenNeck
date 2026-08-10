@@ -34,6 +34,11 @@ class Config:
     speed: int = 0
     acceleration: int = 0
 
+    servo_backend: str = "feetech"
+    operating_mode: int = 3
+    profile_velocity: int = 0
+    profile_acceleration: int = 0
+
     def __post_init__(self) -> None:
         if self.port is not None and not isinstance(self.port, str):
             raise TypeError("port must be a string or None")
@@ -47,6 +52,28 @@ class Config:
         self._validate_axis("pitch")
         _require_int("speed", self.speed, minimum=0, maximum=65_535)
         _require_int("acceleration", self.acceleration, minimum=0, maximum=255)
+
+        if self.servo_backend not in ("feetech", "dynamixel"):
+            raise ValueError(
+                "servo_backend must be 'feetech' or 'dynamixel', "
+                f"got {self.servo_backend!r}"
+            )
+        if isinstance(self.operating_mode, bool) or self.operating_mode not in (
+            0,
+            1,
+            3,
+            4,
+            5,
+            16,
+        ):
+            raise ValueError(
+                "operating_mode must be one of 0,1,3,4,5,16, "
+                f"got {self.operating_mode!r}"
+            )
+        _require_int("profile_velocity", self.profile_velocity, minimum=0)
+        _require_int(
+            "profile_acceleration", self.profile_acceleration, minimum=0
+        )
 
     def _validate_axis(self, axis: str) -> None:
         center = getattr(self, f"{axis}_center_step")
