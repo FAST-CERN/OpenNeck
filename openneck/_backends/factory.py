@@ -13,14 +13,20 @@ def make_backend(
 ) -> ServoBackend:
     """Build the servo backend for ``config``.
 
-    Selects the backend by ``config.servo_backend``. Only ``"feetech"`` is
-    wired so far; ``"dynamixel"`` lands in phase-3.
+    Selects the backend by ``config.servo_backend``: ``"feetech"`` or
+    ``"dynamixel"``.
     """
     name = config.servo_backend
     if name == "feetech":
         from .feetech import FeetechBackend
 
         return FeetechBackend(
+            config, enable_torque_on_connect=enable_torque_on_connect
+        )
+    if name == "dynamixel":
+        from .dynamixel import DynamixelBackend
+
+        return DynamixelBackend(
             config, enable_torque_on_connect=enable_torque_on_connect
         )
     raise ValueError(f"unknown servo_backend: {name!r}")

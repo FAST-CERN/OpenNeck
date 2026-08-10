@@ -14,12 +14,14 @@ class MakeBackendTests(unittest.TestCase):
         backend = make_backend(Config(port="/dev/fake"))
         self.assertIsInstance(backend, ServoBackend)
 
-    def test_dynamixel_backend_not_implemented(self) -> None:
-        # Phase 2 wires only Feetech; Dynamixel lands in phase-3. Using
-        # "dynamixel" (valid to Config) ensures this exercises the factory
-        # branch, not Config's own validation.
-        with self.assertRaises(ValueError):
-            make_backend(Config(port="/dev/fake", servo_backend="dynamixel"))
+    def test_dynamixel_backend_is_selected(self) -> None:
+        from openneck._backends.dynamixel import DynamixelBackend
+
+        backend = make_backend(
+            Config(port="/dev/fake", servo_backend="dynamixel")
+        )
+        self.assertIsInstance(backend, DynamixelBackend)
+        self.assertIsInstance(backend, ServoBackend)
 
 
 if __name__ == "__main__":
