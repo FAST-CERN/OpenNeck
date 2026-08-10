@@ -6,7 +6,11 @@
 
 ## 待办
 
-- M1（software phase-3 处理）：`ServoBackend` Protocol 是否纳入 `ping`/`enable_torque`（设计 §4 已列），还是在设计文档里标为内部？phase-3 落地 `DynamixelBackend` 时定（当前 `FeetechBackend` 已实现二者，仅内部使用，向后兼容，不阻塞）。
+- （暂无）
+
+## 已闭环
+
+- M1（phase-3 闭环）：`ping`/`enable_torque` **不**纳入 `ServoBackend` Protocol——两个后端都实现了二者，但仅内部/具体类使用；Protocol 只保留 `connect/close/read_positions/read_position/write_positions/read_voltage/release_torque`。详见 [`progress/software/phase-3-dynamixel-backend.md`](progress/software/phase-3-dynamixel-backend.md)。
 
 ## 未采纳 / 延后
 

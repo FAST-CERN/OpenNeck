@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**software phase-1（backend 抽象骨架）已并入 fork `FAST-CERN/OpenNeck:main`（本地快进，不走 PR，零行为变化）。software phase-2（config-extension）已完成（TDD，31 passed）。下一步 software phase-3（dynamixel-backend）。** 各阶段计划见 [`plan/`](plan/)。
+**software phase-1（backend 抽象骨架）与 phase-2（config-extension）已并入 fork `FAST-CERN/OpenNeck:main`（本地快进，不走 PR）。software phase-3（dynamixel-backend）已完成（TDD，36 passed；fake-SDK 离线测试）。下一步 software phase-4（sdk-wiring：vendored SDK 可编辑安装 + 导入/真机 ping 冒烟，需人/硬件）。** 各阶段计划见 [`plan/`](plan/)。
 
 ## 工作概述
 
@@ -16,7 +16,7 @@
 |---|---|---|---|---|
 | software | phase-1 backend-skeleton | ✅ 完成 (已合入 fork main) | [`plan/software/README.md`](plan/software/README.md) | [`progress/software/phase-1-backend-skeleton.md`](progress/software/phase-1-backend-skeleton.md) |
 | software | phase-2 config-extension | ✅ 完成 | 同上 | [`progress/software/phase-2-config-extension.md`](progress/software/phase-2-config-extension.md) |
-| software | phase-3 dynamixel-backend | 未开始 | 同上 | 同上 |
+| software | phase-3 dynamixel-backend | ✅ 完成 | 同上 | [`progress/software/phase-3-dynamixel-backend.md`](progress/software/phase-3-dynamixel-backend.md) |
 | software | phase-4 sdk-wiring | 未开始 | 同上 | 同上 |
 | software | phase-5 docs-calibration | 未开始 | 同上 | 同上 |
 | hardware | phase-1 twist2-meshes | 未开始 | [`plan/hardware/README.md`](plan/hardware/README.md) | [`progress/hardware/`](progress/hardware/) |
