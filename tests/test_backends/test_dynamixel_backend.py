@@ -148,6 +148,37 @@ class DynamixelBackendTests(unittest.TestCase):
                 backend.connect()
         self.assertTrue(state["closed"])
 
+    def test_write_positions_uses_group_executor(self):
+        sdk, state = make_fake_easy_sdk()
+        with patch.dict(sys.modules, {"dynamixel_easy_sdk": sdk}):
+            from openneck._backends.dynamixel import DynamixelBackend
+
+            backend = DynamixelBackend(self._config())
+            backend.connect()
+            backend.write_positions({1: 1024, 2: 3072})
+        self.assertEqual(state["writes"], [{1: 1024}, {2: 3072}])
+
+    def test_write_positions_rejects_out_of_range(self):
+        sdk, state = make_fake_easy_sdk()
+        with patch.dict(sys.modules, {"dynamixel_easy_sdk": sdk}):
+            from openneck._backends.dynamixel import DynamixelBackend
+
+            backend = DynamixelBackend(self._config())
+            backend.connect()
+            with self.assertRaises(ValueError):
+                backend.write_positions({1: 5000})
+
+    def test_read_positions_and_voltage(self):
+        sdk, state = make_fake_easy_sdk()
+        state["positions"] = {1: 1500, 2: 2500}
+        with patch.dict(sys.modules, {"dynamixel_easy_sdk": sdk}):
+            from openneck._backends.dynamixel import DynamixelBackend
+
+            backend = DynamixelBackend(self._config())
+            backend.connect()
+            self.assertEqual(backend.read_positions(), {1: 1500, 2: 2500})
+            self.assertAlmostEqual(backend.read_voltage(1), 12.1)
+
 
 if __name__ == "__main__":
     unittest.main()

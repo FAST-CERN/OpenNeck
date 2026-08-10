@@ -101,6 +101,52 @@ class DynamixelBackend:
             with _translate(f"disable torque servo {servo_id}"):
                 self._motors[servo_id].disableTorque()
 
+    def read_positions(self) -> dict[int, int]:
+        self._ensure_connected()
+        return {servo_id: self.read_position(servo_id) for servo_id in self.ids}
+
+    def read_position(self, servo_id: int) -> int:
+        self._ensure_connected()
+        with _translate(f"read servo {servo_id}"):
+            position = int(self._motors[servo_id].getPresentPosition())
+        if position < SERVO_MIN_STEP or position > SERVO_MAX_STEP:
+            raise RuntimeError(f"read servo {servo_id}: invalid position {position}")
+        return position
+
+    def write_positions(self, targets: dict[int, int]) -> None:
+        from dynamixel_easy_sdk import GroupExecutor
+
+        self._ensure_connected()
+        normalized: dict[int, int] = {}
+        for servo_id, position in targets.items():
+            position = int(position)
+            if position < SERVO_MIN_STEP or position > SERVO_MAX_STEP:
+                raise ValueError(
+                    f"servo {servo_id} target must be in "
+                    f"{SERVO_MIN_STEP}..{SERVO_MAX_STEP}, got {position}"
+                )
+            normalized[int(servo_id)] = position
+        with _translate("write positions"):
+            group: GroupExecutor = self._connector.createGroupExecutor()
+            for servo_id in self.ids:
+                if servo_id in normalized:
+                    group.addCmd(
+                        self._motors[servo_id].stageSetGoalPosition(
+                            normalized[servo_id]
+                        )
+                    )
+            group.executeWrite()
+
+    def read_voltage(self, servo_id: int) -> float:
+        self._ensure_connected()
+        motor = self._motors[servo_id]
+        with _translate(f"read voltage servo {servo_id}"):
+            # The SDK exposes no public getPresentInputVoltage(), so look up
+            # the control-table item and read it directly.
+            item = motor._getControlTableItem("Present Input Voltage")
+            raw = motor._readData(servo_id, item.address, item.size)
+        return float(raw) / 10.0
+
     def _ensure_connected(self) -> None:
         if not self._connected:
             raise RuntimeError("OpenNeck is not connected")
