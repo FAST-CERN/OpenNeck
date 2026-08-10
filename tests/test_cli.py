@@ -88,6 +88,39 @@ class AngleCliTests(unittest.TestCase):
         )
         self.assertEqual(sleep.call_args_list, [call(1.0)] * 4)
 
+    def test_backend_and_profile_flags_parse(self) -> None:
+        args = cli.build_parser().parse_args(
+            [
+                "config",
+                "--servo-backend",
+                "dynamixel",
+                "--operating-mode",
+                "4",
+                "--profile-velocity",
+                "100",
+                "--profile-acceleration",
+                "10",
+            ]
+        )
+        self.assertEqual(args.servo_backend, "dynamixel")
+        self.assertEqual(args.operating_mode, 4)
+        self.assertEqual(args.profile_velocity, 100)
+        self.assertEqual(args.profile_acceleration, 10)
+
+    def test_with_overrides_threads_backend_fields(self) -> None:
+        args = cli.build_parser().parse_args(
+            [
+                "config",
+                "--servo-backend",
+                "dynamixel",
+                "--profile-velocity",
+                "100",
+            ]
+        )
+        cfg = cli.with_overrides(args, allow_missing=True)
+        self.assertEqual(cfg.servo_backend, "dynamixel")
+        self.assertEqual(cfg.profile_velocity, 100)
+
 
 if __name__ == "__main__":
     unittest.main()

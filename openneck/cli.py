@@ -49,6 +49,10 @@ def with_overrides(args, *, allow_missing: bool = False) -> Config:
         "pitch_step_sign",
         "speed",
         "acceleration",
+        "servo_backend",
+        "operating_mode",
+        "profile_velocity",
+        "profile_acceleration",
     ]:
         value = getattr(args, key, None)
         if value is not None:
@@ -233,6 +237,14 @@ def add_common(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--pitch-step-sign", type=int, choices=[-1, 1], default=None)
     parser.add_argument("--speed", type=int, default=None)
     parser.add_argument("--acceleration", type=int, default=None)
+    parser.add_argument(
+        "--servo-backend", choices=["feetech", "dynamixel"], default=None
+    )
+    parser.add_argument(
+        "--operating-mode", type=int, choices=[0, 1, 3, 4, 5, 16], default=None
+    )
+    parser.add_argument("--profile-velocity", type=int, default=None)
+    parser.add_argument("--profile-acceleration", type=int, default=None)
 
 
 def build_parser() -> argparse.ArgumentParser:
