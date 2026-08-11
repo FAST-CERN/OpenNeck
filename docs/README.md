@@ -12,8 +12,9 @@
 docs/
   README.md            本索引 + 权威源表（本文件）
   STATUS.md            唯一项目状态源
-  knowledge/           长期参考：设计合同、约定
+  knowledge/           长期参考：设计合同、机制说明、约定
     twist2-dynamixel-design.md   适配工程合同（权威设计）
+    config-dataflow.md           配置数据流（加载/校验/override/后端选择）
     ref/                         约定样例（doc-conventions、AGENTS-ref）
   plan/                计划（打算怎么做）
     software/          openneck Python 包：phase-1..5
@@ -31,6 +32,7 @@ docs/
 | 事实 | 唯一归属 |
 |---|---|
 | 适配设计 / 工程合同 | [`knowledge/twist2-dynamixel-design.md`](knowledge/twist2-dynamixel-design.md) |
+| 配置数据流机制 | [`knowledge/config-dataflow.md`](knowledge/config-dataflow.md) |
 | 项目状态 | [`STATUS.md`](STATUS.md) |
 | 工作区硬性规则 | [`../AGENTS.md`](../AGENTS.md) |
 | 文档结构约定 | [`knowledge/ref/doc-conventions.md`](knowledge/ref/doc-conventions.md) |
