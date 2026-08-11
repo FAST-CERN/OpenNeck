@@ -47,7 +47,7 @@ step 值按线性映射换算，**最终以 `openneck calibrate` 真机读取为
 
 **关键约束**：`Config` 的 `*_max_step` / `*_min_step` 必须 ≤ / ≥ 舵机的 `Max/Min Position Limit`，否则舵机对 `Goal Position` 返回 `Data Limit Error` 拒绝写入。yaw 的 `max_step` 最初按 +50° 算成 3641，超 `Max Position Limit`(3640) 1 step，触发此问题；已改为 3640。
 
-> 注意：OpenNeck 的 `write_positions` 用 `GroupSyncWrite`，**不收集 per-device 错误**，所以超限写入会**静默失败**（不抛错、舵机不动）。诊断方式：用 easy_sdk 单包写（`Motor.setGoalPosition`）会抛 `DxlRuntimeError: SDK_ERRNUM_DATA_LIMIT`。见 todo G5。
+> 注意：`DynamixelBackend.write_positions` 现在写前校验 `Max/Min Position Limit`（`connect` 时读缓存），超限抛 `ValueError`（G5，2026-08-11 修复，提交 a8e41ef）。早期版本用 `GroupSyncWrite` 静默吞超限错误——诊断方式：easy_sdk 单包写（`Motor.setGoalPosition`）会抛 `DxlRuntimeError: SDK_ERRNUM_DATA_LIMIT`。
 
 ## 与当前 OpenNeck 的差异（gap，真机 smoke 前处理）
 
