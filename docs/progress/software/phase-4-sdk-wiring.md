@@ -21,6 +21,17 @@
 
 **对 phase-3 的回溯验证**：真 SDK 的 `OperatingMode.POSITION == 3`，与 phase-3 fake 的 `IntEnum` 取值一致——fake 忠实反映了真 API。
 
+## Task 2 前置：G1 代码修复（2026-08-11）
+
+真机配置（见 [`knowledge/twist2-servo-config.md`](../../knowledge/twist2-servo-config.md)）暴露 yaw_id=0，而 `Config` 校验 `yaw_id`/`pitch_id` `minimum=1` 拒绝 ID 0（G1）。
+
+- 改动：`openneck/_config.py` 把 `yaw_id`/`pitch_id` 下限 `1` → `0`（`maximum=253` 不变；Dynamixel ID 0..252 合法，Feetech 同样适用）。
+- TDD：`tests/test_config.py::test_servo_id_zero_is_allowed`（RED `yaw_id must be 1..253, got 0` → GREEN）。
+- `pytest -q` → 37 passed。
+- 提交 `e125512`。
+
+其余 gap（G2 profile 未应用 / G3 acc 取整 / G4 PID 不管理）smoke 阶段先用舵机 EEPROM 现值绕过，跑通后再决定是否扩展。
+
 ## Task 2：真机冒烟（待操作员/硬件，未自动执行）
 
 > **前置**：TWIST2（或任意 Dynamixel X 系列）云台接在总线上；双舵机 ID 与配置一致；操作员在场。AGENTS.md 规则 5：首次仅 center，再 ≤5° 小幅运动。
