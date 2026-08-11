@@ -69,3 +69,12 @@
 
 - Task 1（离线）：✅ 完成。
 - Task 2（真机）：✅ 完成（2026-08-11，XC330-T288）。**R1/R2 闭环**。
+
+## 配套工具：`scripts/test_limits.py`（2026-08-11）
+
+机械限位测试脚本，诞生于真机 smoke 阶段。两段式：
+
+- **离线裁剪验证**（默认运行，不连硬件）：`openneck._angles.angle_to_step` 对 ±360° 超限请求应裁到 `min_step`/`max_step`。已跑通：yaw 端点 `{2616, 3754}`、pitch 端点 `{1251, 2389}`，全 PASS。
+- **真机渐进逼近**（`--real`，操作员在场）：对 yaw ±50°、pitch -10°/+90° 按 30/60/90/100% 渐进，每步 `input()` 人工门（Enter 继续 / Ctrl-C 中止并 `release_torque`）。
+
+真机段为交互式（人工安全门），需操作员在终端 `python scripts/test_limits.py --real` 自跑；非交互环境（如 AI agent 的 Bash）会在首个 `input()` 收到 EOF 退出。
