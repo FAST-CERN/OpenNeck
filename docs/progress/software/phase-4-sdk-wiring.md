@@ -78,3 +78,19 @@
 - **真机渐进逼近**（`--real`，操作员在场）：对 yaw ±50°、pitch -10°/+90° 按 30/60/90/100% 渐进，每步 `input()` 人工门（Enter 继续 / Ctrl-C 中止并 `release_torque`）。
 
 真机段为交互式（人工安全门），需操作员在终端 `python scripts/test_limits.py --real` 自跑；非交互环境（如 AI agent 的 Bash）会在首个 `input()` 收到 EOF 退出。
+
+**真机渐进结果（2026-08-11，操作员终端跑 `--real`）：**
+
+- 软件侧全对：离线裁剪 PASS；每步 `applied ≈ target`（量化误差 ≤0.03°），裁剪与发送正确。
+- readback 解读：脚本 `move → 立即 read` + 每步 `input()` 间歇，使 `readback` 反映**上一步目标的稳态**（最后 @100 档的稳态未读到）。
+- 关键发现：**yaw 正向物理极限 ~+30°**——@60%（30°）稳态能到 28.92°，@90%（45°）卡在 28.92°（写 45° 到不了）；远小于声明的 +50°。yaw 负向 -45° 能到（-43.77°）。pitch 正向 +81° 能到（+90° 本次未确认），负向 -9° 能到（-8.17°）。
+- 结论：配置里基于声明角度换算的 `max_step`（yaw +50°/pitch +90°）超出真机正向可达范围（负向基本可达）。需 `openneck calibrate` 真机标定物理量程，或查 yaw 正向机械干涉/动力。
+- 脚本可改进：`move` 后加 settle 延时再 `read`，直测每个 target 的稳态（当前 readback 滞后一步）；末档 @100 之后补一次延时 read 以测极限稳态。
+
+**根因闭环（systematic-debugging，2026-08-11）：** 上面"yaw 正向物理极限 ~+30°"是**误判**（Wizard 确认可达 3640）。真因两层：
+
+1. **center 换算偏**：声明零位 280° 不准，真机中位约 270°。改 `yaw_center_step`=3072（270°）后 ±25°、+33°、+42°、-50° 全部到位。
+2. **`max_step` 超舵机 `Max Position Limit`**：yaw `Max Position Limit`=3640，而 +50° 从 270° 算到 step **3641**（超 1 step）。舵机对 `Goal Position` 3641 返回 `Data Limit Error`（easy_sdk 单包 `Motor.setGoalPosition` 抛 `SDK_ERRNUM_DATA_LIMIT(6): data value exceeds the limit`）。
+3. **OpenNeck 静默缺陷（G5）**：`DynamixelBackend.write_positions` 用 `GroupSyncWrite`，协议不收集 per-device 错误，超限写入**静默失败**（舵机不动、不报错）——这是之前"看似卡 3528/29°"的真象。
+
+修复：`yaw_center_step` 3185→3072、`yaw_max_step` 3641→3640（`yaw_min_step` 2503 = `Min Position Limit` 不变）。验证：写 3640 到 3619（Δ-21）、2503 到 2522（Δ+19），**yaw ±50° 双向可达**。详见 [`knowledge/twist2-servo-config.md`](../../knowledge/twist2-servo-config.md)；G5 进 [`todo/todolist.md`](../todo/todolist.md)。脚本已加 `settle_read`（move 后轮询 read_deg 到收敛）。

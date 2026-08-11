@@ -11,6 +11,7 @@
   - G2：`DynamixelBackend.connect()` 应用 `profile_velocity`/`profile_acceleration`（当前只设 `operating_mode`）。
   - G3：`profile_acceleration` 取整策略（`12016.3` → `12016`；`Config.profile_*` 只收 int）。
   - G4：决定 PID（kp/kd/ki）是否由 OpenNeck 管理（当前依赖舵机 EEPROM 已存值）。
+  - G5：`DynamixelBackend.write_positions` 用 `GroupSyncWrite` 不收集 per-device 错误，超 `Max/Min Position Limit` 的写入**静默失败**（2026-08-11 限位测试暴露）。考虑写后校验或改用能返回错误的写法。
 
 ## 已闭环
 
