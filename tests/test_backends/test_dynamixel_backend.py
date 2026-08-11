@@ -83,6 +83,8 @@ def make_fake_easy_sdk():
                 "Max Position Limit": (44, 4),
                 "Min Position Limit": (48, 4),
                 "Goal Position": (116, 4),
+                "Profile Velocity": (112, 4),
+                "Profile Acceleration": (108, 4),
             }
             address, size = table.get(name, (0, 1))
             return _Item(address, size)
@@ -93,6 +95,9 @@ def make_fake_easy_sdk():
             if address == 48:
                 return self.min_position_limit
             return 121  # 12.1 V (Present Input Voltage)
+
+        def _writeData(self, dxl_id, address, length, value):
+            state.setdefault("ram_writes", []).append((dxl_id, address, value))
 
         def stageSetGoalPosition(self, position):
             return StagedCommand("write", self.id, 116, 4, [position])
@@ -179,6 +184,36 @@ class DynamixelBackendTests(unittest.TestCase):
             backend.connect()
             backend.write_positions({1: 1024, 2: 3072})
         self.assertEqual(state["writes"], [{1: 1024}, {2: 3072}])
+
+    def test_connect_applies_profile_when_configured(self):
+        sdk, state = make_fake_easy_sdk()
+        state["ram_writes"] = []
+        with patch.dict(sys.modules, {"dynamixel_easy_sdk": sdk}):
+            from openneck._backends.dynamixel import DynamixelBackend
+
+            backend = DynamixelBackend(
+                self._config(profile_velocity=600, profile_acceleration=12016)
+            )
+            backend.connect()
+            backend.close()
+        expected = {
+            (1, 112, 600),
+            (1, 108, 12016),
+            (2, 112, 600),
+            (2, 108, 12016),
+        }
+        self.assertEqual(set(state["ram_writes"]), expected)
+
+    def test_connect_skips_profile_when_zero(self):
+        sdk, state = make_fake_easy_sdk()
+        state["ram_writes"] = []
+        with patch.dict(sys.modules, {"dynamixel_easy_sdk": sdk}):
+            from openneck._backends.dynamixel import DynamixelBackend
+
+            backend = DynamixelBackend(self._config())  # profile 默认 0
+            backend.connect()
+            backend.close()
+        self.assertEqual(set(state["ram_writes"]), set())
 
     def test_write_positions_rejects_over_hardware_limit(self):
         sdk, state = make_fake_easy_sdk()

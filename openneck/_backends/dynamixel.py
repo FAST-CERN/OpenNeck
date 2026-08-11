@@ -71,6 +71,7 @@ class DynamixelBackend:
                 with _translate(f"configure servo {servo_id}"):
                     motor.disableTorque()
                     motor.setOperatingMode(mode)
+                    self._write_profile(motor, servo_id)
             if self.enable_torque_on_connect:
                 for servo_id in self.ids:
                     with _translate(f"enable torque servo {servo_id}"):
@@ -82,6 +83,24 @@ class DynamixelBackend:
                 pass
             raise
         self._connected = True
+
+    def _write_profile(self, motor: Any, servo_id: int) -> None:
+        """Apply Config profile_velocity / profile_acceleration to RAM.
+
+        Profile Velocity/Acceleration are RAM registers writable while torque
+        is off (written inside the configure step, before torque enable). A
+        config value of 0 means "leave the servo's current value untouched".
+        """
+        if self.config.profile_velocity:
+            item = motor._getControlTableItem("Profile Velocity")
+            motor._writeData(
+                servo_id, item.address, item.size, self.config.profile_velocity
+            )
+        if self.config.profile_acceleration:
+            item = motor._getControlTableItem("Profile Acceleration")
+            motor._writeData(
+                servo_id, item.address, item.size, self.config.profile_acceleration
+            )
 
     def close(self) -> None:
         connector = self._connector
