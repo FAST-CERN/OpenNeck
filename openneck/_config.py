@@ -43,8 +43,8 @@ class Config:
         if self.port is not None and not isinstance(self.port, str):
             raise TypeError("port must be a string or None")
         _require_int("baudrate", self.baudrate, minimum=1)
-        _require_int("yaw_id", self.yaw_id, minimum=1, maximum=253)
-        _require_int("pitch_id", self.pitch_id, minimum=1, maximum=253)
+        _require_int("yaw_id", self.yaw_id, minimum=0, maximum=253)
+        _require_int("pitch_id", self.pitch_id, minimum=0, maximum=253)
         if self.yaw_id == self.pitch_id:
             raise ValueError("yaw_id and pitch_id must be different")
 

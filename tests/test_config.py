@@ -61,6 +61,13 @@ class ConfigTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Config(yaw_id=2, pitch_id=2)
 
+    def test_servo_id_zero_is_allowed(self) -> None:
+        # Dynamixel IDs are 0..252; ID 0 is valid (TWIST2 yaw uses it).
+        cfg = Config(yaw_id=0, pitch_id=1)
+        self.assertEqual(cfg.yaw_id, 0)
+        cfg_pitch_zero = Config(yaw_id=1, pitch_id=0)
+        self.assertEqual(cfg_pitch_zero.pitch_id, 0)
+
     def test_motion_packet_fields_are_range_checked(self) -> None:
         Config(speed=65_535, acceleration=255)
         with self.assertRaises(ValueError):
