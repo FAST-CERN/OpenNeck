@@ -96,3 +96,5 @@
 修复：`yaw_center_step` 3185→3072、`yaw_max_step` 3641→3640（`yaw_min_step` 2503 = `Min Position Limit` 不变）。验证：写 3640 到 3619（Δ-21）、2503 到 2522（Δ+19），**yaw ±50° 双向可达**。详见 [`knowledge/twist2-servo-config.md`](../../knowledge/twist2-servo-config.md)；G5 进 [`todo/todolist.md`](../todo/todolist.md)。脚本已加 `settle_read`（move 后轮询 read_deg 到收敛）。
 
 **G5 修复（2026-08-11，提交 a8e41ef）：** `DynamixelBackend.connect` 现读取并缓存每个 motor 的 `Max/Min Position Limit`；`write_positions` 写前校验 target ∈ `[min, max]`，超限抛 `ValueError`（不再靠 `GroupSyncWrite` 静默吞）。TDD：`test_write_positions_rejects_over_hardware_limit`（fake limit 3640，写 3641 → ValueError）。真机验证：写 3641 raise `exceeds hardware position limit [2503, 3640]`、写 3640 到位 3618。pitch 硬件 limit (1251, 2389) 恰等于 Config，一致。
+
+**G2 修复（2026-08-11，提交 79035ff）：** `DynamixelBackend.connect` 现写 `Config.profile_velocity`/`profile_acceleration` 到每个 motor 的 RAM Profile Velocity/Acceleration 寄存器（在 torque-off 配置段，`setOperatingMode` 之后）；Config 值 0 = 不动（保留舵机值）。TDD：`test_connect_applies_profile_when_configured` + `test_connect_skips_profile_when_zero`。真机验证：yaw Profile Velocity 600 / Acceleration 12016 写入 RAM。

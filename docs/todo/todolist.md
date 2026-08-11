@@ -7,7 +7,6 @@
 ## 待办
 
 - **phase-4 真机 smoke 前的 gap**（来自 [`knowledge/twist2-servo-config.md`](../knowledge/twist2-servo-config.md)）：
-  - G2：`DynamixelBackend.connect()` 应用 `profile_velocity`/`profile_acceleration`（当前只设 `operating_mode`）。
   - G3：`profile_acceleration` 取整策略（`12016.3` → `12016`；`Config.profile_*` 只收 int）。
   - G4：决定 PID（kp/kd/ki）是否由 OpenNeck 管理（当前依赖舵机 EEPROM 已存值）。
 
@@ -20,6 +19,7 @@
 - R4（phase-4 离线闭环）：vendored SDK = 包 `dynamixel-sdk` v4.0.5，setuptools 后端，`package-dir = src`。
 - G1（2026-08-11 闭环）：`Config` 的 `yaw_id`/`pitch_id` 下限放开到 0（`minimum=0`），支持 Dynamixel ID 0。提交 e125512。
 - G5（2026-08-11 闭环）：`DynamixelBackend.write_positions` 写前校验舵机 `Max/Min Position Limit`（`connect` 时读取缓存），超限抛 `ValueError`，不再静默失败。提交 a8e41ef。
+- G2（2026-08-11 闭环）：`DynamixelBackend.connect` 写 `profile_velocity`/`profile_acceleration` 到舵机 RAM（Config 值 0 时不动）。提交 79035ff。
 
 ## 未采纳 / 延后
 

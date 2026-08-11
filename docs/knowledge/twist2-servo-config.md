@@ -18,7 +18,8 @@ TWIST2 云台两个 Dynamixel 舵机的硬件配置事实（ID、零位、限位
 - 零位角度 = 机械正前方（yaw）/ 水平（pitch）时舵机报告的角度。Dynamixel POSITION 模式下 0..360° ↔ 0..4095 step。
 - pitch 限位不对称（-10°..+90°），偏向上。
 - `operating_mode` = POSITION（3）。
-- PID 与 profile 由配置工具写入舵机 EEPROM。
+- `profile_velocity` = 600、`profile_acceleration` = 12016：OpenNeck `connect` 写入舵机 RAM（G2，2026-08-11，提交 79035ff）；Config 值 0 时不动。
+- PID（kp/kd/ki）存舵机 EEPROM，OpenNeck 不写（G4 待定）。
 
 ## 到 `Config` 的映射（step 待真机标定确认）
 
