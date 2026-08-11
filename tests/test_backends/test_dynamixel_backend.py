@@ -48,6 +48,9 @@ def make_fake_easy_sdk():
             self.connector = connector
             self.torque_status = 0
             self.operating_mode_status = OperatingMode.POSITION
+            lo, hi = state.get("limits", {}).get(motor_id, (0, 4095))
+            self.min_position_limit = lo
+            self.max_position_limit = hi
 
         def disableTorque(self):
             self.torque_status = 0
@@ -61,16 +64,35 @@ def make_fake_easy_sdk():
         def getPresentPosition(self):
             return state["positions"].get(self.id, 2048)
 
+        def getMaxPositionLimit(self):
+            item = self._getControlTableItem("Max Position Limit")
+            return self._readData(self.id, item.address, item.size)
+
+        def getMinPositionLimit(self):
+            item = self._getControlTableItem("Min Position Limit")
+            return self._readData(self.id, item.address, item.size)
+
         def _getControlTableItem(self, name):
             class _Item:
                 def __init__(self, address, size):
                     self.address = address
                     self.size = size
 
-            return _Item({"Present Input Voltage": 144}.get(name, 0), 1)
+            table = {
+                "Present Input Voltage": (144, 1),
+                "Max Position Limit": (44, 4),
+                "Min Position Limit": (48, 4),
+                "Goal Position": (116, 4),
+            }
+            address, size = table.get(name, (0, 1))
+            return _Item(address, size)
 
         def _readData(self, dxl_id, address, length):
-            return 121  # 12.1 V
+            if address == 44:
+                return self.max_position_limit
+            if address == 48:
+                return self.min_position_limit
+            return 121  # 12.1 V (Present Input Voltage)
 
         def stageSetGoalPosition(self, position):
             return StagedCommand("write", self.id, 116, 4, [position])
@@ -157,6 +179,22 @@ class DynamixelBackendTests(unittest.TestCase):
             backend.connect()
             backend.write_positions({1: 1024, 2: 3072})
         self.assertEqual(state["writes"], [{1: 1024}, {2: 3072}])
+
+    def test_write_positions_rejects_over_hardware_limit(self):
+        sdk, state = make_fake_easy_sdk()
+        state["limits"] = {1: (0, 3640), 2: (0, 4095)}
+        with patch.dict(sys.modules, {"dynamixel_easy_sdk": sdk}):
+            from openneck._backends.dynamixel import DynamixelBackend
+
+            backend = DynamixelBackend(self._config())
+            backend.connect()
+            with self.assertRaisesRegex(
+                ValueError, "exceeds hardware position limit"
+            ):
+                backend.write_positions({1: 3641})
+            # 在限位内应正常写入
+            backend.write_positions({1: 3640})
+            backend.close()
 
     def test_write_positions_rejects_out_of_range(self):
         sdk, state = make_fake_easy_sdk()

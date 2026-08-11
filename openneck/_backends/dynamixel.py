@@ -35,6 +35,7 @@ class DynamixelBackend:
         self.port_name: str | None = config.port
         self._connector: Any = None
         self._motors: dict[int, Any] = {}
+        self._position_limits: dict[int, tuple[int, int]] = {}
         self._connected = False
 
     def __enter__(self) -> "DynamixelBackend":
@@ -58,6 +59,12 @@ class DynamixelBackend:
                     self._motors[servo_id] = self._connector.createMotor(
                         servo_id
                     )
+            for servo_id in self.ids:
+                motor = self._motors[servo_id]
+                with _translate(f"read position limits servo {servo_id}"):
+                    lo = int(motor.getMinPositionLimit())
+                    hi = int(motor.getMaxPositionLimit())
+                self._position_limits[servo_id] = (lo, hi)
             mode = OperatingMode(self.config.operating_mode)
             for servo_id in self.ids:
                 motor = self._motors[servo_id]
@@ -80,6 +87,7 @@ class DynamixelBackend:
         connector = self._connector
         self._connected = False
         self._motors = {}
+        self._position_limits = {}
         self._connector = None
         if connector is not None:
             with _translate("close port"):
@@ -124,6 +132,12 @@ class DynamixelBackend:
                 raise ValueError(
                     f"servo {servo_id} target must be in "
                     f"{SERVO_MIN_STEP}..{SERVO_MAX_STEP}, got {position}"
+                )
+            lo, hi = self._position_limits[int(servo_id)]
+            if position < lo or position > hi:
+                raise ValueError(
+                    f"servo {servo_id} target {position} exceeds hardware "
+                    f"position limit [{lo}, {hi}]"
                 )
             normalized[int(servo_id)] = position
         with _translate("write positions"):
