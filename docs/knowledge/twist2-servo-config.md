@@ -4,6 +4,8 @@
 
 TWIST2 云台两个 Dynamixel 舵机的硬件配置事实（ID、零位、限位、控制参数），由操作员从舵机配置工具读取，作为 `openneck calibrate` 与 `active_vision_config.json` 的真机基准。操作员提供于 2026-08-11。
 
+**型号**：Dynamixel **XC330-T288**（model_number 1220）。2026-08-11 真机 smoke 验证：`broadcastPing` 解析出 `xc330_t288`，easy_sdk 控制表收录该型号。
+
 ## 舵机配置（原值）
 
 | 舵机 ID | 自由度 | 零位角度 | 运动限位（相对零位） | 控制参数 |
@@ -32,7 +34,7 @@ TWIST2 云台两个 Dynamixel 舵机的硬件配置事实（ID、零位、限位
 | `profile_velocity` | 600 | 600（或舵机默认） |
 | `profile_acceleration` | 12016（原 12016.3，取整） | 默认 |
 
-step 值按线性映射换算，**最终以 `openneck calibrate` 真机读取为准**；`*_step_sign` 需通电后发小角度试方向。
+step 值按线性映射换算，**最终以 `openneck calibrate` 真机读取为准**；`*_step_sign` 需通电后发小角度试方向。2026-08-11 smoke 用上表值已可加载与运动（yaw `sign=1` 物理方向正确）；center 时 yaw 有 ~1.93° 稳态偏差，正式标定建议重跑 `openneck calibrate`。
 
 ## 与当前 OpenNeck 的差异（gap，真机 smoke 前处理）
 

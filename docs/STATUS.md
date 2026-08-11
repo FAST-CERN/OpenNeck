@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**software 组件 phase-1～5 全部完成**（已并入 fork `FAST-CERN/OpenNeck:main`，本地快进、不走 PR）。phase-4 Task 2 真机冒烟仍待硬件/操作员（闭环 R1/R2），属独立硬件验证，不阻塞软件收尾。**下一步可选：hardware phase-1（twist2-meshes），或待硬件就绪做 phase-4 Task 2 真机冒烟。** 各阶段计划见 [`plan/`](plan/)。
+**software 组件 phase-1～5 全部完成**（已并入 fork `FAST-CERN/OpenNeck:main`，本地快进、不走 PR）。phase-4 真机冒烟已通过（2026-08-11，Dynamixel XC330-T288 ×2，**R1/R2 闭环**）。**下一步可选：hardware phase-1（twist2-meshes）。** 各阶段计划见 [`plan/`](plan/)。
 
 ## 工作概述
 
@@ -17,7 +17,7 @@
 | software | phase-1 backend-skeleton | ✅ 完成 (已合入 fork main) | [`plan/software/README.md`](plan/software/README.md) | [`progress/software/phase-1-backend-skeleton.md`](progress/software/phase-1-backend-skeleton.md) |
 | software | phase-2 config-extension | ✅ 完成 | 同上 | [`progress/software/phase-2-config-extension.md`](progress/software/phase-2-config-extension.md) |
 | software | phase-3 dynamixel-backend | ✅ 完成 | 同上 | [`progress/software/phase-3-dynamixel-backend.md`](progress/software/phase-3-dynamixel-backend.md) |
-| software | phase-4 sdk-wiring | 🟡 离线完成 / 真机待硬件 | 同上 | [`progress/software/phase-4-sdk-wiring.md`](progress/software/phase-4-sdk-wiring.md) |
+| software | phase-4 sdk-wiring | ✅ 完成 | 同上 | [`progress/software/phase-4-sdk-wiring.md`](progress/software/phase-4-sdk-wiring.md) |
 | software | phase-5 docs-calibration | ✅ 完成 | 同上 | [`progress/software/phase-5-docs-calibration.md`](progress/software/phase-5-docs-calibration.md) |
 | hardware | phase-1 twist2-meshes | 未开始 | [`plan/hardware/README.md`](plan/hardware/README.md) | [`progress/hardware/`](progress/hardware/) |
 | hardware | phase-2 twist2-sim-models | 未开始 | 同上 | 同上 |

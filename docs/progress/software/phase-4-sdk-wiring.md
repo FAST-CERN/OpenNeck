@@ -32,7 +32,7 @@
 
 其余 gap（G2 profile 未应用 / G3 acc 取整 / G4 PID 不管理）smoke 阶段先用舵机 EEPROM 现值绕过，跑通后再决定是否扩展。
 
-## Task 2：真机冒烟（待操作员/硬件，未自动执行）
+## Task 2：真机冒烟（已完成 2026-08-11）
 
 > **前置**：TWIST2（或任意 Dynamixel X 系列）云台接在总线上；双舵机 ID 与配置一致；操作员在场。AGENTS.md 规则 5：首次仅 center，再 ≤5° 小幅运动。
 
@@ -55,7 +55,17 @@
 
 **完成后在此追加**：实际 port/baudrate/型号、电压读数、center/test 是否正常、任何报错；最终闭环 **R1**（型号控制表可用）与 **R2**（电压 key 可用）。
 
+**实际结果（2026-08-11，操作员在场）：**
+
+- 硬件：Dynamixel **XC330-T288** ×2（model_number 1220），ID 0=yaw / 1=pitch；总线 COM3 @57600；独立供电。
+- 只读扫描 `Connector.broadcastPing()` → 发现 ID {0,1}，`model_name` 解析为 `xc330_t288` → easy_sdk 收录该型号控制表，**R1 闭环**。
+- `openneck voltage`（不使能力矩）→ yaw 12.6V / pitch 12.5V，角度 yaw -3.52° / pitch -0.62°。`Present Input Voltage` 读取成功，**R2 闭环**。
+- `openneck center --hold-s 2` → 使能力矩 + 写目标 (0,0)，pitch 回到 0°；yaw 稳态偏 -1.93°（≈22 step，舵机/机械侧 POSITION 模式带载稳态误差，非软件 bug，操作员确认可接受）。
+- `openneck test yaw --angle-deg 5` → 发送 +5.01° / -5.01° / 0° 目标，`yaw_step_sign=1` 方向一致、运动平顺，操作员确认物理方向正确。
+- 整条链路（`connect`/ping/位置读写/电压/`GroupExecutor` 同步写/`center`/`test`）在真机 XC330-T288 上可用；`setOperatingMode(POSITION)` 与未使能力矩行为符合预期。
+- 遗留（非阻塞）：yaw ~1.93° 稳态偏差，属舵机 PID/机械特性；profile/PID 用 EEPROM 现值（G2/G4 延后）。
+
 ## 状态
 
 - Task 1（离线）：✅ 完成。
-- Task 2（真机）：⏳ 待硬件/操作员。
+- Task 2（真机）：✅ 完成（2026-08-11，XC330-T288）。**R1/R2 闭环**。
