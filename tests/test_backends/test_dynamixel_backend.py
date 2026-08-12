@@ -85,6 +85,9 @@ def make_fake_easy_sdk():
                 "Goal Position": (116, 4),
                 "Profile Velocity": (112, 4),
                 "Profile Acceleration": (108, 4),
+                "Position P Gain": (84, 2),
+                "Position I Gain": (82, 2),
+                "Position D Gain": (80, 2),
             }
             address, size = table.get(name, (0, 1))
             return _Item(address, size)
@@ -214,6 +217,22 @@ class DynamixelBackendTests(unittest.TestCase):
             backend.connect()
             backend.close()
         self.assertEqual(set(state["ram_writes"]), set())
+
+    def test_connect_applies_pid_per_axis(self):
+        sdk, state = make_fake_easy_sdk()
+        state["ram_writes"] = []
+        with patch.dict(sys.modules, {"dynamixel_easy_sdk": sdk}):
+            from openneck._backends.dynamixel import DynamixelBackend
+
+            backend = DynamixelBackend(
+                self._config(yaw_kp=800, yaw_ki=5, yaw_kd=5)
+            )  # pitch PID 默认 0，不写
+            backend.connect()
+            backend.close()
+        yaw_pid = {w for w in state["ram_writes"] if w[0] == 1}
+        pitch_writes = [w for w in state["ram_writes"] if w[0] == 2]
+        self.assertEqual(yaw_pid, {(1, 84, 800), (1, 82, 5), (1, 80, 5)})
+        self.assertEqual(pitch_writes, [])
 
     def test_write_positions_rejects_over_hardware_limit(self):
         sdk, state = make_fake_easy_sdk()

@@ -53,6 +53,12 @@ def with_overrides(args, *, allow_missing: bool = False) -> Config:
         "operating_mode",
         "profile_velocity",
         "profile_acceleration",
+        "yaw_kp",
+        "yaw_ki",
+        "yaw_kd",
+        "pitch_kp",
+        "pitch_ki",
+        "pitch_kd",
     ]:
         value = getattr(args, key, None)
         if value is not None:
@@ -245,6 +251,12 @@ def add_common(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument("--profile-velocity", type=int, default=None)
     parser.add_argument("--profile-acceleration", type=int, default=None)
+    parser.add_argument("--yaw-kp", type=int, default=None)
+    parser.add_argument("--yaw-ki", type=int, default=None)
+    parser.add_argument("--yaw-kd", type=int, default=None)
+    parser.add_argument("--pitch-kp", type=int, default=None)
+    parser.add_argument("--pitch-ki", type=int, default=None)
+    parser.add_argument("--pitch-kd", type=int, default=None)
 
 
 def build_parser() -> argparse.ArgumentParser:

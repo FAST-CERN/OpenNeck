@@ -68,10 +68,12 @@ class DynamixelBackend:
             mode = OperatingMode(self.config.operating_mode)
             for servo_id in self.ids:
                 motor = self._motors[servo_id]
+                axis = "yaw" if servo_id == self.config.yaw_id else "pitch"
                 with _translate(f"configure servo {servo_id}"):
                     motor.disableTorque()
                     motor.setOperatingMode(mode)
                     self._write_profile(motor, servo_id)
+                    self._write_pid(motor, servo_id, axis)
             if self.enable_torque_on_connect:
                 for servo_id in self.ids:
                     with _translate(f"enable torque servo {servo_id}"):
@@ -101,6 +103,21 @@ class DynamixelBackend:
             motor._writeData(
                 servo_id, item.address, item.size, self.config.profile_acceleration
             )
+
+    def _write_pid(self, motor: Any, servo_id: int, axis: str) -> None:
+        """Apply per-axis Position P/I/D Gain to RAM (torque off).
+
+        A config value of 0 leaves the gain untouched.
+        """
+        for suffix, gain in (
+            ("_kp", "Position P Gain"),
+            ("_ki", "Position I Gain"),
+            ("_kd", "Position D Gain"),
+        ):
+            value = getattr(self.config, f"{axis}{suffix}")
+            if value:
+                item = motor._getControlTableItem(gain)
+                motor._writeData(servo_id, item.address, item.size, value)
 
     def close(self) -> None:
         connector = self._connector

@@ -97,6 +97,15 @@ class ConfigTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Config(profile_acceleration=-1)
 
+    def test_pid_fields_default_zero_and_validated(self) -> None:
+        self.assertEqual(Config().yaw_kp, 0)
+        self.assertEqual(Config().pitch_kd, 0)
+        Config(yaw_kp=800, yaw_ki=5, yaw_kd=5, pitch_kp=640, pitch_ki=0, pitch_kd=1600)
+        with self.assertRaises(ValueError):
+            Config(yaw_kp=-1)
+        with self.assertRaises(ValueError):
+            Config(pitch_ki=99999)  # > 16383 (Dynamixel gain range)
+
 
 if __name__ == "__main__":
     unittest.main()

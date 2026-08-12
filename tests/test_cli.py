@@ -121,6 +121,16 @@ class AngleCliTests(unittest.TestCase):
         self.assertEqual(cfg.servo_backend, "dynamixel")
         self.assertEqual(cfg.profile_velocity, 100)
 
+    def test_pid_flags_parse_and_override(self) -> None:
+        args = cli.build_parser().parse_args(
+            ["config", "--yaw-kp", "800", "--pitch-kd", "1600"]
+        )
+        self.assertEqual(args.yaw_kp, 800)
+        self.assertEqual(args.pitch_kd, 1600)
+        cfg = cli.with_overrides(args, allow_missing=True)
+        self.assertEqual(cfg.yaw_kp, 800)
+        self.assertEqual(cfg.pitch_kd, 1600)
+
 
 if __name__ == "__main__":
     unittest.main()

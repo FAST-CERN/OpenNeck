@@ -39,6 +39,13 @@ class Config:
     profile_velocity: int = 0
     profile_acceleration: int = 0
 
+    yaw_kp: int = 0
+    yaw_ki: int = 0
+    yaw_kd: int = 0
+    pitch_kp: int = 0
+    pitch_ki: int = 0
+    pitch_kd: int = 0
+
     def __post_init__(self) -> None:
         if self.port is not None and not isinstance(self.port, str):
             raise TypeError("port must be a string or None")
@@ -74,6 +81,14 @@ class Config:
         _require_int(
             "profile_acceleration", self.profile_acceleration, minimum=0
         )
+        for _axis in ("yaw", "pitch"):
+            for _gain in ("kp", "ki", "kd"):
+                _require_int(
+                    f"{_axis}_{_gain}",
+                    getattr(self, f"{_axis}_{_gain}"),
+                    minimum=0,
+                    maximum=16383,
+                )
 
     def _validate_axis(self, axis: str) -> None:
         center = getattr(self, f"{axis}_center_step")
