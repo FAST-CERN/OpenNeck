@@ -143,6 +143,8 @@ Dynamixel 构建请选择后端并设置 Dynamixel 专属字段（以下为默�
 }
 ```
 
+按你的硬件选择对应模板——`active_vision_config.feetech.example.json` 或 `active_vision_config.dynamixel.example.json`——复制为 `active_vision_config.json`，再按实际安装修改 `port`、舵机 ID 与 `*_step_sign`。标定步进值（`*_center_step` / `*_min_step` / `*_max_step`）为安全默认；请在真实机构上运行 `openneck calibrate` 重新记录。
+
 `yaw_step_sign` 和 `pitch_step_sign` 只允许为 `1` 或 `-1`：
 
 - 逻辑正角度使舵机 step 增大时填 `1`。

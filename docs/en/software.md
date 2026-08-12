@@ -150,6 +150,8 @@ For a Dynamixel build, select the backend and set the Dynamixel-only fields
 }
 ```
 
+Copy whichever template matches your hardware — `active_vision_config.feetech.example.json` or `active_vision_config.dynamixel.example.json` — to `active_vision_config.json` and edit the `port`, servo IDs, and `*_step_sign` for your installation. The calibration steps (`*_center_step` / `*_min_step` / `*_max_step`) are safe defaults; run `openneck calibrate` against the actual mechanism to record real values.
+
 `yaw_step_sign` and `pitch_step_sign` accept only `1` or `-1`:
 
 - Use `1` when a positive logical angle increases the servo step value.

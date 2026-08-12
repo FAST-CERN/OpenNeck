@@ -107,5 +107,22 @@ class ConfigTests(unittest.TestCase):
             Config(pitch_ki=99999)  # > 16383 (Dynamixel gain range)
 
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+class ExampleConfigTests(unittest.TestCase):
+    def test_feetech_example_is_valid(self) -> None:
+        path = REPO_ROOT / "active_vision_config.feetech.example.json"
+        config = load_config(path)
+        self.assertEqual(config.servo_backend, "feetech")
+        self.assertEqual(config.baudrate, 1_000_000)
+
+    def test_dynamixel_example_is_valid(self) -> None:
+        path = REPO_ROOT / "active_vision_config.dynamixel.example.json"
+        config = load_config(path)
+        self.assertEqual(config.servo_backend, "dynamixel")
+        self.assertEqual(config.baudrate, 57_600)
+
+
 if __name__ == "__main__":
     unittest.main()
