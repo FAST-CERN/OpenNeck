@@ -21,14 +21,24 @@ pip install .
 
 ### Dynamixel backend (optional)
 
-The Dynamixel backend uses the vendored ROBOTIS SDK, included as a git
-submodule. Install it editable after cloning with submodules:
+The Dynamixel backend uses the ROBOTIS SDK vendored as a git submodule. After
+cloning with `--recurse-submodules`, install OpenNeck with the `dynamixel`
+extra, which pulls the SDK automatically:
 
 ```bash
 git clone --recurse-submodules <repo>
-pip install .
+pip install ".[dynamixel]"
+```
+
+For an editable SDK install (when debugging the SDK itself), use the manual
+form instead:
+
+```bash
 pip install -e thirdparty/DynamixelSDK/python
 ```
+
+If `pip`'s build isolation cannot reach PyPI through your proxy, add
+`--no-build-isolation` (the host env must already have `setuptools` and `wheel`).
 
 If the current Linux user does not have serial-port permission:
 

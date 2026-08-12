@@ -21,13 +21,20 @@ pip install .
 
 ### Dynamixel 后端（可选）
 
-Dynamixel 后端使用以 git 子模块内置的 ROBOTIS SDK。克隆子模块后以可编辑方式安装：
+Dynamixel 后端使用以 git 子模块内置的 ROBOTIS SDK。带 `--recurse-submodules` 克隆后，用 `dynamixel` extra 安装，SDK 会自动拉取：
 
 ```bash
 git clone --recurse-submodules <repo>
-pip install .
+pip install ".[dynamixel]"
+```
+
+如需可编辑安装 SDK（调试 SDK 本身时），改用手动方式：
+
+```bash
 pip install -e thirdparty/DynamixelSDK/python
 ```
+
+若 `pip` 构建隔离环境下经代理无法访问 PyPI，加 `--no-build-isolation`（宿主环境需已安装 `setuptools` 与 `wheel`）。
 
 Linux 没有串口权限时：
 

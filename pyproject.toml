@@ -14,6 +14,9 @@ dependencies = [
     "ftservo-python-sdk==2.0.0",
 ]
 
+[project.optional-dependencies]
+dynamixel = ["dynamixel-sdk @ file:thirdparty/DynamixelSDK/python"]
+
 [project.scripts]
 openneck = "openneck.cli:main"
 openneck-scan-servos = "openneck.tools.scan_servos:main"
