@@ -11,7 +11,7 @@ TWIST2 云台两个 Dynamixel 舵机的硬件配置事实（ID、零位、限位
 | 舵机 ID | 自由度 | 零位角度 | 运动限位（相对零位） | 控制参数 |
 |---|---|---|---|---|
 | 0 | yaw | 270° | [-50°, +50°] | kp=800 kd=5 ki=5；profile_velocity=600 profile_acceleration≈12016 |
-| 1 | pitch | 120° | [-10°, +90°] | （用舵机默认） |
+| 1 | pitch | 120° | [-10°, +90°] | kp=800 kd=5 ki=5 |
 
 > yaw 零位于 2026-08-11 真机修正：原按声明值 280° 换算 center=3185，限位测试发现正向物理极限仅 ~step 3625（+50° 算到 3754 超物理、舵机稳态卡 ~29°）。改用实测零位 270°（center=3072），+50° = step 3641 贴近物理极限，可达。
 
@@ -19,7 +19,7 @@ TWIST2 云台两个 Dynamixel 舵机的硬件配置事实（ID、零位、限位
 - pitch 限位不对称（-10°..+90°），偏向上。
 - `operating_mode` = POSITION（3）。
 - `profile_velocity` = 600、`profile_acceleration` = 12016：OpenNeck `connect` 写入舵机 RAM（G2，2026-08-11，提交 79035ff）；Config 值 0 时不动。
-- PID（kp/kd/ki）：per-axis，Config `yaw_kp/ki/kd` + `pitch_kp/ki/kd`（默认 0，0..16383）；`DynamixelBackend.connect` 写非 0 值到舵机 Position P/I/D Gain（G4，2026-08-12，提交 7897ed6）；0 = 保留舵机 EEPROM 值。yaw 实测 800/5/5。
+- PID（kp/kd/ki）：per-axis，Config `yaw_kp/ki/kd` + `pitch_kp/ki/kd`（默认 0，0..16383）；`DynamixelBackend.connect` 写非 0 值到舵机 Position P/I/D Gain（G4，2026-08-12，提交 7897ed6）；0 = 保留舵机 EEPROM 值。yaw/pitch 均设 800/5/5（pitch EEPROM 原值 1200/0/0，由 OpenNeck 覆盖）。
 
 ## 到 `Config` 的映射（step 待真机标定确认）
 
