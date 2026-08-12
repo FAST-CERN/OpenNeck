@@ -159,7 +159,7 @@ OpenNeck 支持两类舵机，由 `servo_backend` 字段选择：
 - `"feetech"`（默认）—— 经 `scservo_sdk` 驱动 Feetech SCS/STS。
 - `"dynamixel"` —— 经内置 `dynamixel_easy_sdk` 驱动 Dynamixel X 系列。
 
-Dynamixel 专属字段：`operating_mode`（默认 `3`，POSITION），以及 `profile_velocity` / `profile_acceleration`（默认 `0`，表示最大）。Feetech 后端会忽略它们。完整模型见[设计合同](../knowledge/twist2-dynamixel-design.md)。
+Dynamixel 专属字段：`operating_mode`（默认 `3`，POSITION）；`profile_velocity` / `profile_acceleration`（默认 `0` = 不写入，保留舵机值）；以及 per-axis 位置 PID `yaw_kp`/`yaw_ki`/`yaw_kd`/`pitch_kp`/`pitch_ki`/`pitch_kd`（默认 `0` = 不写入）。Feetech 后端忽略它们。完整模型见[设计合同](../knowledge/twist2-dynamixel-design.md)。
 
 ## 其他命令
 

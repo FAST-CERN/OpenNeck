@@ -166,9 +166,11 @@ OpenNeck supports two servo families, selected by the `servo_backend` field:
 - `"feetech"` (default) — Feetech SCS/STS via `scservo_sdk`.
 - `"dynamixel"` — Dynamixel X-series via the vendored `dynamixel_easy_sdk`.
 
-Dynamixel-only fields: `operating_mode` (default `3`, POSITION), and
-`profile_velocity` / `profile_acceleration` (default `0`, meaning max). They
-are ignored by the Feetech backend. See the
+Dynamixel-only fields: `operating_mode` (default `3`, POSITION);
+`profile_velocity` / `profile_acceleration` (default `0` = leave the servo
+untouched); and per-axis Position PID gains `yaw_kp` / `yaw_ki` / `yaw_kd` /
+`pitch_kp` / `pitch_ki` / `pitch_kd` (default `0` = untouched). They are
+ignored by the Feetech backend. See the
 [design contract](../knowledge/twist2-dynamixel-design.md) for the full model.
 
 ## Other Commands

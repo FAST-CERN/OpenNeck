@@ -19,7 +19,7 @@ TWIST2 云台两个 Dynamixel 舵机的硬件配置事实（ID、零位、限位
 - pitch 限位不对称（-10°..+90°），偏向上。
 - `operating_mode` = POSITION（3）。
 - `profile_velocity` = 600、`profile_acceleration` = 12016：OpenNeck `connect` 写入舵机 RAM（G2，2026-08-11，提交 79035ff）；Config 值 0 时不动。
-- PID（kp/kd/ki）存舵机 EEPROM，OpenNeck 不写（G4 待定）。
+- PID（kp/kd/ki）：per-axis，Config `yaw_kp/ki/kd` + `pitch_kp/ki/kd`（默认 0，0..16383）；`DynamixelBackend.connect` 写非 0 值到舵机 Position P/I/D Gain（G4，2026-08-12，提交 7897ed6）；0 = 保留舵机 EEPROM 值。yaw 实测 800/5/5。
 
 ## 到 `Config` 的映射（step 待真机标定确认）
 
