@@ -6,8 +6,7 @@
 
 ## 待办
 
-- **phase-4 真机 smoke 前的 gap**（来自 [`knowledge/twist2-servo-config.md`](../knowledge/twist2-servo-config.md)）：
-  - G3：`profile_acceleration` 取整策略（`12016.3` → `12016`；`Config.profile_*` 只收 int）。
+- （暂无；G1–G5 均已闭环）
 
 ## 已闭环
 
@@ -20,6 +19,7 @@
 - G5（2026-08-11 闭环）：`DynamixelBackend.write_positions` 写前校验舵机 `Max/Min Position Limit`（`connect` 时读取缓存），超限抛 `ValueError`，不再静默失败。提交 a8e41ef。
 - G2（2026-08-11 闭环）：`DynamixelBackend.connect` 写 `profile_velocity`/`profile_acceleration` 到舵机 RAM（Config 值 0 时不动）。提交 79035ff。
 - G4（2026-08-12 闭环）：`Config` 加 per-axis PID（`yaw_kp/ki/kd`、`pitch_kp/ki/kd`，默认 0）；`DynamixelBackend.connect` 写非 0 值到 Position P/I/D Gain；CLI `--yaw-kp` 等。提交 7897ed6。
+- G3（2026-08-12 闭环）：`Config.profile_*` 经 `_require_int` 只收 int；浮点值（如 `12016.3`）由调用方取整（`12016`）。`twist2-servo-config.md` 已标注。
 
 ## 未采纳 / 延后
 
