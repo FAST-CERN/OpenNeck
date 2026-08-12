@@ -224,6 +224,12 @@ class ControllerKwargTests(unittest.TestCase):
         # operating_mode was absent from the file -> Config default 3.
         self.assertEqual(neck._config.operating_mode, 3)
 
+    def test_operating_mode_zero_is_passed_through(self) -> None:
+        # Pins the `is not None` guard: a falsy-but-valid operating_mode=0
+        # (Dynamixel CURRENT mode) must reach Config, not be dropped.
+        neck = OpenNeckController(self.config_path, operating_mode=0)
+        self.assertEqual(neck._config.operating_mode, 0)
+
 
 if __name__ == "__main__":
     unittest.main()
