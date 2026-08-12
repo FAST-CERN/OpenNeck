@@ -43,10 +43,22 @@ class OpenNeckController:
         config: str | Path | None = None,
         *,
         port: str | None = None,
+        servo_backend: str | None = None,
+        baudrate: int | None = None,
+        operating_mode: int | None = None,
     ) -> None:
         loaded = _load_config(config)
-        if port is not None:
-            loaded = _replace_config(loaded, port=port)
+        changes = {}
+        for key, value in (
+            ("port", port),
+            ("servo_backend", servo_backend),
+            ("baudrate", baudrate),
+            ("operating_mode", operating_mode),
+        ):
+            if value is not None:
+                changes[key] = value
+        if changes:
+            loaded = _replace_config(loaded, **changes)
         self._config = loaded
         self._backend = _make_backend(loaded)
 

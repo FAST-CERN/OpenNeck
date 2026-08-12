@@ -160,5 +160,70 @@ class ControllerTests(unittest.TestCase):
         )
 
 
+class ControllerKwargTests(unittest.TestCase):
+    """servo_backend / baudrate / operating_mode constructor kwargs.
+
+    Does NOT patch openneck.api._make_backend: the real factory must run so
+    that servo_backend="dynamixel" produces a real (unconnected)
+    DynamixelBackend. connect() is never called, so no SDK import happens.
+    """
+
+    def setUp(self) -> None:
+        self.directory = tempfile.TemporaryDirectory()
+        self.config_path = Path(self.directory.name) / "config.json"
+        self.config_path.write_text(
+            json.dumps(
+                {
+                    "port": "/dev/from-config",
+                    "baudrate": 1_000_000,
+                    "yaw_id": 7,
+                    "pitch_id": 8,
+                    "yaw_center_step": 2000,
+                    "yaw_min_step": 1900,
+                    "yaw_max_step": 2100,
+                    "yaw_step_sign": 1,
+                    "pitch_center_step": 1500,
+                    "pitch_min_step": 1400,
+                    "pitch_max_step": 1600,
+                    "pitch_step_sign": -1,
+                    "speed": 0,
+                    "acceleration": 0,
+                    "servo_backend": "feetech",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    def tearDown(self) -> None:
+        self.directory.cleanup()
+
+    def test_servo_backend_kwarg_selects_dynamixel(self) -> None:
+        from openneck._backends.dynamixel import DynamixelBackend
+
+        neck = OpenNeckController(self.config_path, servo_backend="dynamixel")
+        self.assertEqual(neck._config.servo_backend, "dynamixel")
+        self.assertIsInstance(neck._backend, DynamixelBackend)
+
+    def test_baudrate_and_operating_mode_kwargs_override_config(self) -> None:
+        neck = OpenNeckController(
+            self.config_path, baudrate=57600, operating_mode=4
+        )
+        self.assertEqual(neck._config.baudrate, 57600)
+        self.assertEqual(neck._config.operating_mode, 4)
+        # Untouched fields keep the file value.
+        self.assertEqual(neck._config.servo_backend, "feetech")
+
+    def test_invalid_servo_backend_kwarg_raises(self) -> None:
+        with self.assertRaises(ValueError):
+            OpenNeckController(self.config_path, servo_backend="bogus")
+
+    def test_no_kwargs_keeps_loaded_config(self) -> None:
+        neck = OpenNeckController(self.config_path)
+        self.assertEqual(neck._config.servo_backend, "feetech")
+        self.assertEqual(neck._config.baudrate, 1_000_000)
+        # operating_mode was absent from the file -> Config default 3.
+        self.assertEqual(neck._config.operating_mode, 3)
+
+
 if __name__ == "__main__":
     unittest.main()
