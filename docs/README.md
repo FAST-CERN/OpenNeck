@@ -42,5 +42,6 @@ docs/
 | 硬件阶段计划 | [`plan/hardware/README.md`](plan/hardware/README.md) |
 | 待办 / 点子 | [`todo/todolist.md`](todo/todolist.md) |
 | 软件使用说明 | [`en/software.md`](en/software.md) · [`zh-CN/software.md`](zh-CN/software.md) |
+| 部署到既有环境（teleopit 等） | [`en/deployment-teleopit.md`](en/deployment-teleopit.md) · [`zh-CN/deployment-teleopit.md`](zh-CN/deployment-teleopit.md) |
 
 其余位置**只链接**，不抄写具体值（测试数字、版本号、量程、机器路径）。
