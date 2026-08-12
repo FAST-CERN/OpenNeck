@@ -22,7 +22,7 @@ OpenNeck is an open-source 2-DoF robotic neck gimbal. The repository provides 3D
 ## Project Contents
 
 - **Mechanical hardware**: editable STEP models, print-ready STL models, a sourcing list, and assembly instructions.
-- **Software driver**: a Python API, command-line tools, servo maintenance tools, and procedures for center and mechanical-limit calibration.
+- **Software driver**: a Python API, command-line tools, servo maintenance tools, and center / mechanical-limit calibration. Supports both Feetech and Dynamixel servo backends (selected via the `servo_backend` config field).
 - **Simulation models**: standalone URDF and MuJoCo XML models with their supporting meshes.
 
 ## Documentation
