@@ -16,6 +16,7 @@ docs/
     twist2-dynamixel-design.md   适配工程合同（权威设计）
     config-dataflow.md           配置数据流（加载/校验/override/后端选择）
     twist2-servo-config.md       TWIST2 舵机硬件配置（ID/零位/限位/参数）
+    gitlab-mirror.md             自建 GitLab 镜像远程（SSH/cpolar/push 锁）
     ref/                         约定样例（doc-conventions、AGENTS-ref）
   plan/                计划（打算怎么做）
     software/          openneck Python 包：phase-1..5
@@ -35,6 +36,7 @@ docs/
 | 适配设计 / 工程合同 | [`knowledge/twist2-dynamixel-design.md`](knowledge/twist2-dynamixel-design.md) |
 | 配置数据流机制 | [`knowledge/config-dataflow.md`](knowledge/config-dataflow.md) |
 | TWIST2 舵机硬件配置 | [`knowledge/twist2-servo-config.md`](knowledge/twist2-servo-config.md) |
+| GitLab 镜像远程（自建）设置 | [`knowledge/gitlab-mirror.md`](knowledge/gitlab-mirror.md) |
 | 项目状态 | [`STATUS.md`](STATUS.md) |
 | 工作区硬性规则 | [`../AGENTS.md`](../AGENTS.md) |
 | 文档结构约定 | [`knowledge/ref/doc-conventions.md`](knowledge/ref/doc-conventions.md) |
