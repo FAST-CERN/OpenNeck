@@ -1,8 +1,8 @@
 # OpenNeck
 
 <p align="center">
-  <img src="docs/images/openneck-cad-render.png" alt="OpenNeck 2-DoF neck gimbal CAD render" width="58%">
-  <img src="docs/images/openneck-on-robot.png" alt="OpenNeck 2-DoF neck gimbal installed on a robot" width="40%">
+  <img src="docs/images/twist2neck-cad-render.png" alt="OpenNeck 2-DoF neck gimbal CAD render" width="58%">
+  <img src="docs/images/twist2neck-on-robot.jpg" alt="OpenNeck 2-DoF neck gimbal installed on a robot" width="40%">
 </p>
 
 <p align="center">

@@ -1,8 +1,8 @@
 # OpenNeck
 
 <p align="center">
-  <img src="docs/images/openneck-cad-render.png" alt="OpenNeck 二自由度颈部云台 CAD 渲染图" width="58%">
-  <img src="docs/images/openneck-on-robot.png" alt="OpenNeck 二自由度颈部云台装机实拍" width="40%">
+  <img src="docs/images/twist2neck-cad-render.png" alt="OpenNeck 二自由度颈部云台 CAD 渲染图" width="58%">
+  <img src="docs/images/twist2neck-on-robot.jpg" alt="OpenNeck 二自由度颈部云台装机实拍" width="40%">
 </p>
 
 <p align="center">
