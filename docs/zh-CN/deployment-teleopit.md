@@ -1,6 +1,20 @@
 # 将 OpenNeck 部署到既有环境（如 `teleopit`）
 
-把当前 OpenNeck 版本（v0.2.x，含可选 Dynamixel 后端）安装进你已在运行的环境——例如 `teleopit` conda 环境——的迁移运维手册。覆盖全新安装与升级，Linux 与 Windows 通用。
+[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [部署](./deployment-teleopit.md) · [迁移](./migration-from-upstream.md) · [English](../en/deployment-teleopit.md) · **中文**
+
+## 目录
+
+- [为什么需要这份指南](#为什么需要这份指南)
+- [第 0 步——确认目标解释器](#第-0-步确认目标解释器)
+- [第 1 步——获取代码（含 Dynamixel 子模块）](#第-1-步获取代码含-dynamixel-子模块)
+- [第 2 步——安装包](#第-2-步安装包)
+- [第 3 步——迁移运行时配置](#第-3-步迁移运行时配置)
+- [第 4 步——真机验证](#第-4-步真机验证)
+- [集成方式](#集成方式)
+- [排错](#排错)
+- [参考](#参考)
+
+把当前 OpenNeck 版本（`0.3.0`，含可选 Dynamixel 后端）安装进你已在运行的环境——例如 `teleopit` conda 环境——的迁移运维手册。覆盖全新安装与升级，Linux 与 Windows 通用。
 
 完整的配置字段参考与标定流程见 [`software.md`](software.md)。本指南只链接这些值，不复述。
 
@@ -114,7 +128,7 @@ Copy-Item active_vision_config.dynamixel.example.json active_vision_config.json
 `./active_vision_config.json`。若 `teleopit` 并非从固定 CWD 启动，请改用
 [集成方式](#集成方式)中的显式模式，而不是依赖 CWD。
 
-> 从 0.1.x 升级？旧的归一化幅值字段无法换算成 0.2.x 的角度方向，需重跑
+> 从 0.1.x 升级？旧的归一化幅值字段无法换算成当前的角度方向系统（`0.3.0`），需重跑
 > `openneck calibrate`。详见 [`software.md`](software.md)。
 
 ## 第 4 步——真机验证

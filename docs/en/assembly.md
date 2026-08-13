@@ -1,6 +1,6 @@
 # OpenNeck Mechanical Assembly
 
-[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · **English** · [中文](../zh-CN/assembly.md)
+[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · [Deployment](./deployment-teleopit.md) · [Migration](./migration-from-upstream.md) · **English** · [中文](../zh-CN/assembly.md)
 
 Keep the system powered off throughout assembly. First identify three directions: the D415 lenses face forward, the yaw servo output shaft points up, and the pitch servo output shaft is horizontal.
 

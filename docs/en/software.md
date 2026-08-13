@@ -1,6 +1,15 @@
 # OpenNeck Software Driver
 
-[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · **English** · [中文](../zh-CN/software.md)
+[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · [Deployment](./deployment-teleopit.md) · [Migration](./migration-from-upstream.md) · **English** · [中文](../zh-CN/software.md)
+
+## Contents
+
+- [Installation](#installation) — `pip install .` / Dynamixel extra
+- [Servo Setup and Calibration](#servo-setup-and-calibration) — assign IDs, center, safe range
+- [Configuration](#configuration) — config schema, `*_step_sign`, upgrade notes
+- [Servo backend](#servo-backend) — Feetech vs Dynamixel
+- [Other Commands](#other-commands) — `config`, `voltage`, CLI flags
+- [Python API](#python-api) — `OpenNeckController`, `move_deg`
 
 The OpenNeck software driver converts target angles into servo positions and applies the calibrated mechanical limits. The main control API accepts only angles relative to the mechanical center:
 
@@ -51,6 +60,8 @@ Log in again for the change to take effect. For temporary testing, you can use:
 ```bash
 sudo chmod 666 /dev/ttyACM0
 ```
+
+For deploying OpenNeck into an existing environment (e.g. `teleopit`), see [Deployment](./deployment-teleopit.md).
 
 ## Servo Setup and Calibration
 
@@ -169,7 +180,9 @@ Copy whichever template matches your hardware — `active_vision_config.feetech.
 
 These two fields fully represent the mechanical installation direction, so upper-level callers always use the same left-positive and up-positive convention. A configuration containing unknown fields raises an error so that invalid settings are not silently accepted.
 
-When upgrading from `0.1.x`, run `openneck calibrate` again. The normalized-amplitude and pose-inversion fields in an old configuration cannot safely determine the new physical angle directions, so `0.2.x` does not convert them automatically. Back up or move the old file first, then set both `*_step_sign` fields for the actual installation direction.
+When upgrading from `0.1.x`, run `openneck calibrate` again. The normalized-amplitude and pose-inversion fields in an old configuration cannot safely determine the new physical angle directions, so the current version (`0.3.0`) does not convert them automatically. Back up or move the old file first, then set both `*_step_sign` fields for the actual installation direction.
+
+Upgrading from `0.2.x` to `0.3.0` requires no config changes — the schema is additive (new `servo_backend` / `operating_mode` / `profile_*` / `*_kp,ki,kd` fields are all optional), and `yaw_id` / `pitch_id` now also accept `0`. To adopt Dynamixel, set `servo_backend` and install the `dynamixel` extra. See [Upgrading from upstream](./migration-from-upstream.md) for the full API/config/CLI change list.
 
 ## Servo backend
 
@@ -193,6 +206,8 @@ openneck voltage --port "$OPENNECK_PORT"
 ```
 
 `openneck-calibrate-middle` changes the servo's internal nonvolatile hardware midpoint; `openneck calibrate` only updates OpenNeck's JSON runtime configuration.
+
+Every config field can be overridden on the command line as `--<field>` (underscores → dashes), e.g. `--port`, `--yaw-id`, `--servo-backend`. Flags added in `0.3.0` mirror the new config fields: `--servo-backend {feetech,dynamixel}`, `--operating-mode {0,1,3,4,5,16}`, `--profile-velocity`, `--profile-acceleration`, and the per-axis PID gains `--yaw-kp/ki/kd` / `--pitch-kp/ki/kd`. All default to unset, so existing command lines behave identically. See [migration-from-upstream](./migration-from-upstream.md#cli-changes) for the full list.
 
 ## Python API
 

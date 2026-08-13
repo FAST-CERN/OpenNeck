@@ -1,6 +1,15 @@
 # OpenNeck 软件驱动
 
-[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [English](../en/software.md) · **中文**
+[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [部署](./deployment-teleopit.md) · [迁移](./migration-from-upstream.md) · [English](../en/software.md) · **中文**
+
+## 目录
+
+- [安装](#安装) — `pip install .` / Dynamixel extra
+- [舵机设置与标定](#舵机设置与标定) — 分配 ID、中位、安全范围
+- [配置](#配置) — 配置 schema、`*_step_sign`、升级说明
+- [舵机后端](#舵机后端) — Feetech 与 Dynamixel
+- [其他命令](#其他命令) — `config`、`voltage`、CLI flags
+- [Python API](#python-api) — `OpenNeckController`、`move_deg`
 
 OpenNeck 软件驱动负责把目标角度转换为舵机位置，并执行标定后的机械限位。主要控制 API 只接受相对机械中位的角度：
 
@@ -47,6 +56,8 @@ sudo usermod -a -G dialout $USER
 ```bash
 sudo chmod 666 /dev/ttyACM0
 ```
+
+将 OpenNeck 部署到既有环境（如 `teleopit`）见[部署](./deployment-teleopit.md)。
 
 ## 舵机设置与标定
 
@@ -159,7 +170,9 @@ Dynamixel 构建请选择后端并设置 Dynamixel 专属字段（以下为默�
 
 机械安装方向完全由这两个字段吸收，上层调用始终使用相同的左正、上正约定。配置包含未知字段时会直接报错，避免错误配置被静默接受。
 
-从 `0.1.x` 升级时需要重新运行 `openneck calibrate`。旧配置中的归一化幅度和姿态反向字段不能安全推导新的物理角度方向，因此 `0.2.x` 不会自动转换旧配置；请先备份或移走旧文件，再按实际安装方向设置两个 `*_step_sign` 字段。
+从 `0.1.x` 升级时需要重新运行 `openneck calibrate`。旧配置中的归一化幅度和姿态反向字段不能安全推导新的物理角度方向，因此当前版本（`0.3.0`）不会自动转换旧配置；请先备份或移走旧文件，再按实际安装方向设置两个 `*_step_sign` 字段。
+
+从 `0.2.x` 升级到 `0.3.0` 无需改动配置——schema 为增量扩展（新增的 `servo_backend` / `operating_mode` / `profile_*` / `*_kp,ki,kd` 字段均为可选），且 `yaw_id` / `pitch_id` 现在接受 `0`。若要使用 Dynamixel，设置 `servo_backend` 并安装 `dynamixel` extra。完整的 API/配置/CLI 变化清单见[从上游升级](./migration-from-upstream.md)。
 
 ## 舵机后端
 
@@ -178,6 +191,8 @@ openneck voltage --port "$OPENNECK_PORT"
 ```
 
 `openneck-calibrate-middle` 修改舵机内部的非易失硬件中位；`openneck calibrate` 只更新 OpenNeck 的 JSON 运行配置。
+
+每个配置字段都可在命令行用 `--<字段名>` 覆盖（下划线转连字符），例如 `--port`、`--yaw-id`、`--servo-backend`。`0.3.0` 新增的 flag 与新配置字段一一对应：`--servo-backend {feetech,dynamixel}`、`--operating-mode {0,1,3,4,5,16}`、`--profile-velocity`、`--profile-acceleration`，以及 per-axis PID `--yaw-kp/ki/kd` / `--pitch-kp/ki/kd`。默认均不设置，故既有命令行行为不变。完整列表见[从上游升级](./migration-from-upstream.md#cli-变化)。
 
 ## Python API
 

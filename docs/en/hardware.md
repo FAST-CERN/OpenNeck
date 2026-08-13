@@ -1,6 +1,6 @@
 # OpenNeck Hardware Preparation
 
-[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · **English** · [中文](../zh-CN/hardware.md)
+[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · [Deployment](./deployment-teleopit.md) · [Migration](./migration-from-upstream.md) · **English** · [中文](../zh-CN/hardware.md)
 
 This page collects OpenNeck's mechanical resources, sourcing list, fasteners, and 3D-printing files.
 

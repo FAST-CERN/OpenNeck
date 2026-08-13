@@ -1,6 +1,6 @@
 # OpenNeck 硬件准备
 
-[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [English](../en/hardware.md) · **中文**
+[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [部署](./deployment-teleopit.md) · [迁移](./migration-from-upstream.md) · [English](../en/hardware.md) · **中文**
 
 本页汇总 OpenNeck 的机械资源、采购清单、紧固件和 3D 打印文件。
 

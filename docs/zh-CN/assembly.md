@@ -1,6 +1,6 @@
 # OpenNeck 机械装配
 
-[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [English](../en/assembly.md) · **中文**
+[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [部署](./deployment-teleopit.md) · [迁移](./migration-from-upstream.md) · [English](../en/assembly.md) · **中文**
 
 全程断电操作。先认准三个方向：D415 镜头朝前，yaw 舵机输出轴朝上，pitch 舵机输出轴水平。
 

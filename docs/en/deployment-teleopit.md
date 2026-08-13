@@ -1,6 +1,20 @@
 # Deploying OpenNeck into an existing environment (e.g. `teleopit`)
 
-A migration runbook for installing this OpenNeck build (v0.2.x, with the
+[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · [Deployment](./deployment-teleopit.md) · [Migration](./migration-from-upstream.md) · **English** · [中文](../zh-CN/deployment-teleopit.md)
+
+## Contents
+
+- [Why this guide exists](#why-this-guide-exists)
+- [Step 0 — Confirm the target interpreter](#step-0--confirm-the-target-interpreter)
+- [Step 1 — Get the code with the Dynamixel submodule](#step-1--get-the-code-with-the-dynamixel-submodule)
+- [Step 2 — Install the package](#step-2--install-the-package)
+- [Step 3 — Migrate the runtime config](#step-3--migrate-the-runtime-config)
+- [Step 4 — Verify on real hardware](#step-4--verify-on-real-hardware)
+- [Integration patterns](#integration-patterns)
+- [Troubleshooting](#troubleshooting)
+- [Reference](#reference)
+
+A migration runbook for installing this OpenNeck build (`0.3.0`, with the
 optional Dynamixel backend) into a Python environment you already run — for
 example the `teleopit` conda env. It covers fresh installs and upgrades, on
 both Linux and Windows.
@@ -132,8 +146,8 @@ explicit patterns in [Integration patterns](#integration-patterns) instead of
 relying on CWD.
 
 > Upgrading from 0.1.x? The old normalized-amplitude fields cannot be
-> converted to 0.2.x angle directions; run `openneck calibrate` again. See
-> [`software.md`](software.md).
+> converted to the current angle-direction system (`0.3.0`); run
+> `openneck calibrate` again. See [`software.md`](software.md).
 
 ## Step 4 — Verify on real hardware
 

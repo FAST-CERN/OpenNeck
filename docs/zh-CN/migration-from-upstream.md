@@ -1,5 +1,19 @@
 # 从上游 BotRunner64 OpenNeck 升级
 
+[主页](../../README.md) · [软件](./software.md) · [硬件](./hardware.md) · [装配](./assembly.md) · [部署](./deployment-teleopit.md) · [迁移](./migration-from-upstream.md) · [English](../en/migration-from-upstream.md) · **中文**
+
+## 目录
+
+- [一览](#一览)
+- [公开 API 变化](#公开-api-变化)
+- [下游代码需要改哪些地方](#下游代码需要改哪些地方)
+- [配置 schema 变化](#配置-schema-变化)
+- [CLI 变化](#cli-变化)
+- [打包变化](#打包变化)
+- [使用时要注意的行为差异](#使用时要注意的行为差异)
+- [迁移清单](#迁移清单)
+- [参考](#参考)
+
 本 fork 相对原始 BotRunner64 OpenNeck 的 API 变化、更新到当前版本时需要改哪些地方、以及使用时要注意的行为差异。装进具体环境的步骤见 [`deployment-teleopit.md`](deployment-teleopit.md)；完整字段参考见 [`software.md`](software.md)。
 
 **基线：** 对比的基准是与 `upstream`（`BotRunner64/OpenNeck`）的 git merge-base，提交 `145e6bf`——即本 fork 分叉的精确位置。下文"原始版本"指该状态。

@@ -1,5 +1,19 @@
 # Upgrading from upstream BotRunner64 OpenNeck
 
+[Home](../../README.md) · [Software](./software.md) · [Hardware](./hardware.md) · [Assembly](./assembly.md) · [Deployment](./deployment-teleopit.md) · [Migration](./migration-from-upstream.md) · **English** · [中文](../zh-CN/migration-from-upstream.md)
+
+## Contents
+
+- [At a glance](#at-a-glance)
+- [Public API changes](#public-api-changes)
+- [What you must change in downstream code](#what-you-must-change-in-downstream-code)
+- [Config schema changes](#config-schema-changes)
+- [CLI changes](#cli-changes)
+- [Packaging changes](#packaging-changes)
+- [Behavioral differences to watch](#behavioral-differences-to-watch)
+- [Migration checklist](#migration-checklist)
+- [Reference](#reference)
+
 What changed in this fork's API versus the original BotRunner64 OpenNeck, what
 you must change in downstream code when updating, and behavioral differences
 to watch. For install/config migration into a specific environment see
