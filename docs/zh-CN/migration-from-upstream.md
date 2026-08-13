@@ -15,7 +15,7 @@
 | 配置文件 | 仅新增——新可选字段；`yaw_id`/`pitch_id` 现允许 `0` |
 | CLI 子命令 | 不变（`ports`、`config`、`voltage`、`calibrate`、`center`、`test`） |
 | CLI flag | 仅新增可选 flag；旧 flag 不变 |
-| `pyproject.toml` | 新增 `dynamixel` extra；依赖不变；**版本仍为 `0.2.0`**（见陷阱） |
+| `pyproject.toml` | 新增 `dynamixel` extra；依赖不变；**版本 bump 到 `0.3.0`**（上游为 `0.2.0`） |
 
 **结论：** 如果你的下游代码只用公开 API（`OpenNeckController` / `NeckAngles`），**什么都不用改**。唯一的硬性破坏是导入了私有的 `ServoDriver`。
 
@@ -24,9 +24,9 @@
 包导出不变：
 
 ```python
-# openneck/__init__.py —— 原始与 fork 相同
+# openneck/__init__.py —— 导出不变；版本自上游 0.2.0 bump
 __all__ = ["NeckAngles", "OpenNeckController"]
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 ```
 
 `OpenNeckController` 的每个公开方法签名都保持不变：
@@ -108,8 +108,9 @@ OpenNeckController(
 
 - `pyproject.toml` 依赖不变（`pyserial`、`ftservo-python-sdk`）。
 - 新增可选 extra：`pip install ".[dynamixel]"` 拉取内置 Dynamixel SDK 子模块。纯 Feetech 的 `pip install .` 不变。
-- **版本陷阱：** fork **没有** bump `__version__`——仍是 `0.2.0`，与上游相同。不要靠 `openneck.__version__` 判断是否在 fork 上。用 backends 包是否存在或安装位置来判断：
+- **版本：** fork 报告 `0.3.0`；上游报告 `0.2.0`。可用 `openneck.__version__` 判断是否在 fork 上。对于仍报告 `0.2.0` 的旧 fork 构建，退回 `_backends` 探测或安装位置：
   ```bash
+  python -c "import openneck; print(openneck.__version__)"   # 0.3.0 = fork, 0.2.0 = 上游
   python -c "import importlib.util as u; print(bool(u.find_spec('openneck._backends')))"
   pip show openneck | grep Location
   ```
@@ -127,7 +128,7 @@ OpenNeckController(
 - [ ] 在代码库里 `grep -rn "_driver\|ServoDriver"`——按"需要改哪些地方"#2/#3 替换任何私有导入。
 - [ ] 重跑现有 `OpenNeckController` 冒烟测试——应原样通过。
 - [ ] 若启用 Dynamixel：设 `servo_backend`、装 extra、在真实机构上 `openneck calibrate`。
-- [ ] 确认装上的确实是 fork（版本号不可靠——用上面的 `_backends` 探测）。
+- [ ] 确认装上的确实是 fork（`openneck.__version__` 应为 `0.3.0`；或用 `_backends` 探测）。
 
 ## 参考
 

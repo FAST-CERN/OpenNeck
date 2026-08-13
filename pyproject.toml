@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openneck"
-version = "0.2.0"
+version = "0.3.0"
 description = "Angle-based two-axis OpenNeck servo driver and maintenance tools."
 readme = "README.md"
 license = { file = "LICENSE" }

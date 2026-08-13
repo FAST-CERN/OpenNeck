@@ -77,7 +77,7 @@ sudo usermod -aG dialout "$USER"   # 然后注销重新登录
 **验证安装：**
 
 ```bash
-python -c "import openneck; print(openneck.__version__)"      # -> 0.2.0
+python -c "import openneck; print(openneck.__version__)"      # -> 0.3.0
 # 仅 Dynamixel 版：
 python -c "from dynamixel_easy_sdk import Connector; print('sdk ok')"
 ```

@@ -21,7 +21,7 @@ diverged. "Original" below means that state.
 | Config file | Additive — new optional fields; `yaw_id`/`pitch_id` now allow `0` |
 | CLI subcommands | Unchanged (`ports`, `config`, `voltage`, `calibrate`, `center`, `test`) |
 | CLI flags | New optional flags added; old flags unchanged |
-| `pyproject.toml` | New `dynamixel` extra; deps unchanged; **version still `0.2.0`** (see gotcha) |
+| `pyproject.toml` | New `dynamixel` extra; deps unchanged; **version bumped to `0.3.0`** (upstream is `0.2.0`) |
 
 **Bottom line:** if your downstream code used only the public API
 (`OpenNeckController` / `NeckAngles`), you need to change **nothing**. The only
@@ -32,9 +32,9 @@ hard break is importing the private `ServoDriver`.
 The package exports are unchanged:
 
 ```python
-# openneck/__init__.py — same in original and fork
+# openneck/__init__.py — exports unchanged; version bumped from upstream's 0.2.0
 __all__ = ["NeckAngles", "OpenNeckController"]
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 ```
 
 `OpenNeckController` keeps every public method with the same signature:
@@ -132,11 +132,11 @@ behave identically): `--servo-backend`, `--operating-mode`,
 - `pyproject.toml` dependencies are unchanged (`pyserial`, `ftservo-python-sdk`).
 - New optional extra: `pip install ".[dynamixel]"` pulls the vendored
   Dynamixel SDK submodule. Plain `pip install .` (Feetech) is unchanged.
-- **Version gotcha:** the fork did **not** bump `__version__` — it is still
-  `0.2.0`, same as upstream. Do not rely on `openneck.__version__` to detect
-  whether you are on the fork. Detect the fork by the presence of the
-  backends package or the install location:
+- **Version:** the fork reports `0.3.0`; upstream reports `0.2.0`. Detect the
+  fork with `openneck.__version__`. For older fork builds that still reported
+  `0.2.0`, fall back to the `_backends` probe or install location:
   ```bash
+  python -c "import openneck; print(openneck.__version__)"   # 0.3.0 = fork, 0.2.0 = upstream
   python -c "import importlib.util as u; print(bool(u.find_spec('openneck._backends')))"
   pip show openneck | grep Location
   ```
@@ -164,8 +164,8 @@ behave identically): `--servo-backend`, `--operating-mode`,
       unchanged.
 - [ ] If adopting Dynamixel: set `servo_backend`, install the extra, run
       `openneck calibrate` on the real mechanism.
-- [ ] Confirm the fork is actually installed (version check is unreliable —
-      use the `_backends` probe above).
+- [ ] Confirm the fork is actually installed (`openneck.__version__` should
+      be `0.3.0`; or use the `_backends` probe).
 
 ## Reference
 

@@ -91,7 +91,7 @@ sudo usermod -aG dialout "$USER"   # then log out and back in
 **Verify the install:**
 
 ```bash
-python -c "import openneck; print(openneck.__version__)"      # -> 0.2.0
+python -c "import openneck; print(openneck.__version__)"      # -> 0.3.0
 # Dynamixel build only:
 python -c "from dynamixel_easy_sdk import Connector; print('sdk ok')"
 ```
